@@ -1,5 +1,5 @@
 """
-ASGI config for trip_assistant project.
+ASGI config for trip-assistant project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'trip_assistant.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'trip-assistant.settings')
 
 application = get_asgi_application()
