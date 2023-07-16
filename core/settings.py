@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 INSTALLED_EXTENSIONS = [
     'assistant',
     'users',
+    'locations'
 ]
 
 INSTALLED_APPS += INSTALLED_EXTENSIONS
@@ -124,6 +125,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATIC_ROOT = 'TripAssistant/src/static/'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -136,3 +139,5 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'youremail@gmail.com'
 EMAIL_HOST_PASSWORD = 'yourpassword'
 EMAIL_PORT = 587
+
+MYPY_DJANGO_CONFIG = './mypy.ini'
