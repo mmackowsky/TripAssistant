@@ -10,7 +10,7 @@ class Profile(models.Model):
 
 class Images(models.Model):
     image = models.ImageField()
-    by = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    uploaded_by = models.ForeignKey(Profile, on_delete=models.CASCADE)
     date_posted = models.DateField()
 
 
