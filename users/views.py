@@ -5,12 +5,13 @@ from django.contrib.auth import login, authenticate, logout, get_user_model
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.sites.shortcuts import get_current_site
-from django.utils.encoding import force_bytes, force_text
+from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
+from django.http import HttpRequest
 
 
 def signup(request):
@@ -20,29 +21,46 @@ def signup(request):
             user = form.save(commit=False)
             user.is_activate = False
             user.save()
-            current_site = get_current_site(request)
-            mail_subject = 'Activation link has been sent to your email id'
-            message = render_to_string('acc_active_email.html', {
-                'user': user,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': account_activation_token.make_token(user),
-            })
             to_email = form.cleaned_data.get('email')
-            email = EmailMessage(
-                mail_subject, message, to=[to_email]
-            )
-            email.send()
+            send_email(request, user, to_email)
+            # current_site = get_current_site(request)
+            # mail_subject = 'Activation link has been sent to your email id'
+            # message = render_to_string('acc_active_email.html', {
+            #     'user': user,
+            #     'domain': current_site.domain,
+            #     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            #     'token': account_activation_token.make_token(user),
+            # })
+            # to_email = form.cleaned_data.get('email')
+            # email = EmailMessage(
+            #     mail_subject, message, to=[to_email]
+            # )
+            # email.send()
             return HttpResponse('Please confirm your email address to complete registration')
         else:
             form = SignupForm()
         return render(request, 'signup.html', {'form': form})
 
 
+def send_email(request: HttpRequest, user: User, to_email: str) -> None:
+    current_site = get_current_site(request)
+    mail_subject = 'Activation link has been sent to your email id'
+    message = render_to_string('acc_active_email.html', {
+        'user': user,
+        'domain': current_site.domain,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': account_activation_token.make_token(user),
+    })
+    email = EmailMessage(
+        mail_subject, message, to=[to_email]
+    )
+    email.send()
+
+
 def activate(request, uid64, token):
     User = get_user_model()
     try:
-        uid = force_text(urlsafe_base64_decode(uid64))
+        uid = force_str(urlsafe_base64_decode(uid64))
         user = User.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
@@ -64,16 +82,20 @@ def login_request(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, f'Hello {username}!')
-                return redirect('home.html')
+                return redirect('assistant/index.html')
             else:
                 messages.error(request, 'Invalid username or password.')
         else:
             messages.error(request, 'Invalid username or password.')
     form = AuthenticationForm()
-    return render(request=request, template_name='users/login.html', context={'login_form': form})
+    return render(request=request, template_name='users/sign-in.html', context={'login_form': form})
 
 
 def logout_request(request):
     logout(request)
     messages.info(request, 'Successfully logout.')
-    return redirect('home.html')
+    return redirect('assistant/index.html')
+
+
+# def profile(request):
+#
