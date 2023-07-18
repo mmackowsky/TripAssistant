@@ -27,7 +27,8 @@ def mypy(app_configs, **kwargs) -> List:
     # If performance is an issue then `app_configs` can be inspected and the scope
     # of the mypy check can be restricted
     mypy_args = [settings.BASE_DIR]
-    results = api.run([settings.BASE_DIR])
+    results = api.run(mypy_args)
+
     error_messages = results[0]
 
     if not error_messages:
