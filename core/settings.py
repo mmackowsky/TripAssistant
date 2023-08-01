@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sslserver',
-    'social_django'
+    'social_django',
+    'django_extensions'
 ]
 
 INSTALLED_EXTENSIONS = [
@@ -74,7 +75,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'social_django.context_processors.backends'
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -83,6 +85,7 @@ TEMPLATES = [
 #social_app custom settings
 AUTHENTICATION_BACKENDS = [
     'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.google.GoogleOAuth',
     'social_core.backends.facebook.FacebookOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 ]
@@ -176,10 +179,15 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_URL = 'logout'
 LOGOUT_REDIRECT_URL = 'login'
 
+# SOCIAL_AUTH_FACEBOOK_API_VERSION = '2.8'
+# SOCIAL_AUTH_RAISE_EXCEPTIONS = False
+
 SOCIAL_AUTH_FACEBOOK_KEY = "3047692055527014"
-SOCIAL_AUTH_FACEBOOK_SECRET = "a8f241964868d3e3d73"
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "your_google_clientId"
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "your_google_clientsecret"
+SOCIAL_AUTH_FACEBOOK_SECRET = "a8f241964868d3e3d73ba0ba9329fbc5"
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "629383613751-skqjt5e56sovapvt9rveci2utm5n4m81.apps.googleusercontent.com"
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
+
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 # add this
 SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [
