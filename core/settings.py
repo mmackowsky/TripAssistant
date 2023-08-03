@@ -115,6 +115,16 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'your_db_name',
+#         'USER': 'postgres',
+#         'PASSWORD': '48bc27agh!',
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -168,9 +178,18 @@ GOOGLE_API_KEY = 'AIzaSyAPHHVh_oOnivnsoJa7jKW47nJ1S822FdQ'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'youremail@gmail.com'
-EMAIL_HOST_PASSWORD = 'yourpassword'
+EMAIL_HOST_USER = 'tripassistant.confirm@gmail.com'
+EMAIL_HOST_PASSWORD = 'dwwospwxknaxpdtb' # password from google account ('app passwords') PS. only available when 2-step verification is on!!
 EMAIL_PORT = 587
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+#
+#
+#
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+#
+# # EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+# # EMAIL_FILE_PATH = "/tmp/app-messages"  # change this to a proper location
 
 MYPY_DJANGO_CONFIG = './mypy.ini'
 
@@ -179,8 +198,6 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_URL = 'logout'
 LOGOUT_REDIRECT_URL = 'login'
 
-# SOCIAL_AUTH_FACEBOOK_API_VERSION = '2.8'
-# SOCIAL_AUTH_RAISE_EXCEPTIONS = False
 
 SOCIAL_AUTH_FACEBOOK_KEY = "3047692055527014"
 SOCIAL_AUTH_FACEBOOK_SECRET = "a8f241964868d3e3d73ba0ba9329fbc5"
