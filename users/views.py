@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.shortcuts import HttpResponse
-from .forms import SignupForm
 from django.contrib.auth import login, authenticate, logout, get_user_model
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
@@ -8,10 +7,12 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
-from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.http import HttpRequest
+
+from .forms import SignupForm
+from .tokens import account_activation_token
 
 
 def signup(request):
@@ -19,7 +20,8 @@ def signup(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.is_activate = False
+            # user.is_activate = False
+            user.is_active = False
             user.save()
             to_email = form.cleaned_data.get('email')
             send_email(request, user, to_email)
@@ -32,7 +34,7 @@ def signup(request):
 def send_email(request: HttpRequest, user: User, to_email: str) -> None:
     current_site = get_current_site(request)
     mail_subject = 'Activation link has been sent to your email id'
-    message = render_to_string('acc_active_email.html', {
+    message = render_to_string('users/acc_active_email.html', {
         'user': user,
         'domain': current_site.domain,
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
@@ -65,8 +67,7 @@ def activate(request, uid64, token):
     user = get_user_by_uid(uid64)
     if activate_user(user, token):
         return HttpResponse('Thank you for email confirmation. Now you can login your account')
-    else:
-        return HttpResponse('Activation link is invalid')
+    return HttpResponse('Activation link is invalid')
 
 
 def login_request(request):
@@ -84,15 +85,12 @@ def login_request(request):
                 messages.error(request, 'Invalid username or password.')
         else:
             messages.error(request, 'Invalid username or password.')
-    form = AuthenticationForm()
+    else:
+        form = AuthenticationForm()
     return render(request=request, template_name='users/login.html', context={'login_form': form})
 
 
 def logout_request(request):
     logout(request)
     messages.info(request, 'Successfully logout.')
-    return redirect('users/login.html')
-
-
-# def profile(request):
-#
+    return redirect('login')
