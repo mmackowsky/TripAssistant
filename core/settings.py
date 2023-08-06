@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sslserver',
     'social_django',
-    'django_extensions'
+    'django_extensions',
 ]
 
 INSTALLED_EXTENSIONS = [
@@ -108,23 +108,23 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'your_db_name',
-#         'USER': 'postgres',
-#         'PASSWORD': '48bc27agh!',
-#         'HOST': '127.0.0.1',
-#         'PORT': '5432',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres@localhost',
+        'USER': 'postgres',
+        'PASSWORD': '48bc27agh!',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -183,13 +183,6 @@ EMAIL_HOST_PASSWORD = 'dwwospwxknaxpdtb' # password from google account ('app pa
 EMAIL_PORT = 587
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-#
-#
-#
-# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-#
-# # EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-# # EMAIL_FILE_PATH = "/tmp/app-messages"  # change this to a proper location
 
 MYPY_DJANGO_CONFIG = './mypy.ini'
 
@@ -206,7 +199,6 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
-# add this
 SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [
     ('name', 'name'),
     ('email', 'email'),
