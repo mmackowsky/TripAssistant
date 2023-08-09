@@ -1,4 +1,5 @@
 from django.db import models
+
 from locations import models as locations_models
 
 
