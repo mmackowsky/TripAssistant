@@ -1,5 +1,8 @@
-{% load static %}
+
+<!doctype html>
 <html lang="en">
+{% load static %}
+
    <head>
       <!-- Required meta tags -->
       <meta charset="utf-8">
@@ -12,6 +15,7 @@
       <!-- Style -->
       <link rel="stylesheet" href="{% static 'base/css/style.css' %}">
       <title>Trip Assistant</title>
+      {% block html_head %}{% endblock %}
    </head>
    <body>
       <div class="site-mobile-menu">
@@ -33,6 +37,7 @@
                      {% if user.is_authenticated %}
                      <ul class="site-menu js-clone-nav mr-auto d-none d-lg-block">
                      <li class="active"><a href="{% url 'home' %}"><span>Home</span></a></li>
+                     <li><a href="{% url 'profile' %}"><span>Profile</span></a></li>
                      <li><a href="{% url 'logout' %}"><span>Logout</span></a></li>
                      {% else %}
                      <ul class="site-menu js-clone-nav mr-auto d-none d-lg-block">
@@ -45,16 +50,31 @@
                </div>
 <!--               <div class="d-inline-block d-xl-none ml-md-0 mr-auto py-3" style="position: relative; top: 3px;"><a href="#" class="site-menu-toggle js-menu-toggle text-white"><span class="icon-menu h3"></span></a></div>-->
             </div>
+            {% for message in messages %}
+            <div class="container-fluid p-3">
+              <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+                {{ message }}
+              </div>
+            </div>
+            {% endfor %}
            {% block content %}
            {% endblock %}
          </div>
-         </div>
       </header>
+
       <div class="hero" style="background-image: url('{% static 'base/images/hero_1.jpg' %}');"></div>
       <script src="{% static 'base/js/jquery-3.3.1.min.js' %}"></script>
       <script src="{% static 'base/js/popper.min.js' %}"></script>
       <script src="{% static 'base/js/bootstrap.min.js' %}"></script>
       <script src="{% static 'base/js/jquery.sticky.js' %}"></script>
       <script src="{% static 'base/js/main.js' %}"></script>
+
+      <footer>
+         {% include 'footer.html' %}
+      </footer>
    </body>
+
 </html>
