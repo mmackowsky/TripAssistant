@@ -1,7 +1,7 @@
 from django.urls import path
 
-from .views import search
+from .views import LocationListView
 
 urlpatterns = [
-    path('', search, name="home")
+    path('', LocationListView.as_view(), name="home")
 ]
