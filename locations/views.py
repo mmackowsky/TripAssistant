@@ -36,7 +36,7 @@ class LocationListView(ListView):
 
     def _get_from_api(self, place_type, location_name):
         query = f"{place_type} near {location_name}"
-        api_url = f'https://nominatim.openstreetmap.org/search?q={query}&format=json&addressdetails=1&limit=9&key={settings.NOMINATIM_API_KEY}'
+        api_url = f'https://nominatim.openstreetmap.org/search?q={query}&format=json&addressdetails=1&limit=24&key={settings.NOMINATIM_API_KEY}'
         data = requests.get(api_url).json()
         self.__parse_response_data(data)
 
@@ -51,11 +51,13 @@ class LocationListView(ListView):
         if form.is_valid():
             location_name = form.cleaned_data.get('location_name')
             place_type = form.cleaned_data.get('place_type')
+            queryset = queryset.filter(city__icontains=location_name, place_type=place_type)
 
-            if location_name and place_type:
+            if not queryset.exists():
+                self._get_from_api(place_type, location_name)
                 queryset = queryset.filter(city__icontains=location_name, place_type=place_type)
-        return queryset
 
+        return queryset
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -65,31 +67,12 @@ class LocationListView(ListView):
     def post(self, request, *args, **kwargs):
         form = SearchForm(request.POST)
         if form.is_valid():
-            location_name = form.cleaned_data.get('location_name')
-            place_type = form.cleaned_data.get('place_type')
-            self._get_from_api(place_type, location_name)
-
             queryset = self.get_queryset()
 
             # paginator = Paginator(queryset, self.paginate_by)
-
+            # page_number = request.GET.get("page")
+            # page_obj = paginator.get_page(page_number)
 
             return render(request, 'home.html', {'form': form, 'locations': queryset})
         return render(request, 'home.html', {'form': form})
 
-
-    # @staticmethod
-    # def search(request):
-    #     if request.method == "POST":
-    #         form = SearchForm(request.POST)
-    #         if form.is_valid():
-    #             location_name = form.cleaned_data.get('location_name')
-    #             place_type = form.cleaned_data.get('place_type')
-    #             query = f"{place_type} near {location_name}"
-    #             api_url = f'https://nominatim.openstreetmap.org/search?q={query}&format=json&addressdetails=1&limit=9&key={settings.NOMINATIM_API_KEY}'
-    #             data = requests.get(api_url).json()
-    #             parsed_data = parse_response_data(data)
-    #             return render(request, 'home.html', {'form': form, 'data': parsed_data})
-    #     else:
-    #         form = SearchForm()
-    #     return render(request, 'home.html', {'form': form})
