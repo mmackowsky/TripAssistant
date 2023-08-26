@@ -4,35 +4,95 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <script src="https://kit.fontawesome.com/6095ccca98.js" crossorigin="anonymous"></script>
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="author" content="colorlib.com">
     <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" />
     <link href="{% static 'home/css/main.css' %}" rel="stylesheet" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'home/css/cards_style.css' %}">
   </head>
 {% endblock %}
-{% block content %}
+
+
   <body>
+  {% block content %}
     <div class="s01">
 
-      <form>
+      <form method="POST">
+        {% csrf_token %}
         <fieldset>
           <legend>Discover the Amazing City</legend>
         </fieldset>
         <div class="inner-form">
           <div class="input-field first-wrap">
-            <input id="search" type="text" placeholder="What are you looking for?" />
+            <label for="place_type"></label>
+            <input id="place_type" name="place_type" type="text" placeholder="What are you looking for?" />
           </div>
           <div class="input-field second-wrap">
-            <input id="location" type="text" placeholder="Location" />
+            <label for="location_name"></label>
+            <input id="location_name" name="location_name" type="text" placeholder="Location" />
           </div>
           <div class="input-field third-wrap">
-            <button class="btn-search" type="button">Search</button>
+            <button class="btn-search" type="submit">Search</button>
           </div>
         </div>
       </form>
+
     </div>
 
-  </body>
-</html>
+  {% if form.is_valid %}
+  <main>
 
-{% endblock %}
+      <div class="all-container">
+
+      {% for item in locations %}
+      <div class="card">
+          <div class="card-one">
+            <img class="card-img" src="https://images.unsplash.com/photo-1591699396114-d936888e470f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="Ephesus Picture">
+            <h6 class="guided">{{ item.place_type }}</h6>
+            <h5>{{ item.location_name }}</h5>
+
+
+            <div class="icon">
+              <i class="far fa-clock"> <span>{{ item.city }}</span></i><br>
+              <i class="fas fa-running"> <span>{{ item.street }} {{ item.house_number }}</span></i><br>
+              <i class="fas fa-user-friends"> <span>{{ item.postcode }} </span></i>
+            </div>
+            <div class="prices">
+              <span class="from">From</span>
+              <span class="price"><i class="fas fa-euro-sign"></i> 79</span>
+              <span class="person">per person</span>
+            </div>
+         </div>
+        </div>
+      {% endfor %}
+
+      <div class="pagination">
+       <span class="step-links">
+          {% if locations.has_previous %}
+              <a href="?page=1">&laquo; first</a>
+              <a href="?page={{ locations.previous_page_number }}">previous</a>
+          {% endif %}
+
+          <span class="current">
+              Page {{ locations.number }} of {{ locations.paginator.num_pages }}.
+          </span>
+
+          {% if locations.has_next %}
+              <a href="?page={{ locations.next_page_number }}">next</a>
+              <a href="?page={{ locations.paginator.num_pages }}">last &raquo;</a>
+          {% endif %}
+      </span>
+    </div>
+
+  </main>
+  {% endif %}
+
+  {% endblock %}
+
+  </body>
