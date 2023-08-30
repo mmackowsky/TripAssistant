@@ -3,7 +3,7 @@
 {% block html_head %}
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <script src="https://kit.fontawesome.com/6095ccca98.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -101,15 +101,6 @@
 
     <div class="pagination justify-content-center">
 
-<!--			{% if locations.has_previous %}-->
-<!--			<form method="POST" action="?page={{ locations.previous_page_number }}">-->
-<!--				{% csrf_token %}-->
-<!--				<input type="hidden" name="place_type" value="{{ request.POST.place_type }}">-->
-<!--				<input type="hidden" name="location_name" value="{{ request.POST.location_name }}">-->
-<!--				<button type="submit">previous</button>-->
-<!--			</form>-->
-<!--			{% endif %}-->
-
 		{% for page_num in locations.paginator.page_range %}
 
 			<form method="POST" action="?page={{ page_num }}">
@@ -120,54 +111,9 @@
             </form>
 
 		{% endfor %}
-<!--			{% if locations.has_next %}-->
-<!--			<form method="POST" action="?page={{ locations.next_page_number }}">-->
-<!--				{% csrf_token %}-->
-<!--				<input type="hidden" name="place_type" value="{{ request.POST.place_type }}">-->
-<!--				<input type="hidden" name="location_name" value="{{ request.POST.location_name }}">-->
-<!--				<button type="submit">next</button>-->
-<!--			</form>-->
-<!--			{% endif %}-->
-
 
 	</div>
-<!--    <div class="pagination justify-content-center">-->
-<!--        <span class="step-links">-->
-<!--            {% if locations.has_previous %}-->
-<!--                <form method="POST" action="?page=1&location_name={{ location_name }}&place_type={{ place_type }}">-->
-<!--                    {% csrf_token %}-->
-<!--                    <input type="hidden" name="place_type" value="{{ request.POST.place_type }}">-->
-<!--                    <input type="hidden" name="location_name" value="{{ request.POST.location_name }}">-->
-<!--                    <button type="submit">&laquo; first</button>-->
-<!--                </form>-->
-<!--                <form method="POST" action="?page={{ locations.previous_page_number }}&location_name={{ location_name }}&place_type={{ place_type }}">-->
-<!--                    {% csrf_token %}-->
-<!--                    <input type="hidden" name="place_type" value="{{ request.POST.place_type }}">-->
-<!--                    <input type="hidden" name="location_name" value="{{ request.POST.location_name }}">-->
-<!--                    <button type="submit">previous</button>-->
-<!--                </form>-->
-<!--            {% endif %}-->
 
-<!--            <span class="current">-->
-<!--                Page {{ locations.number }} of {{ locations.paginator.num_pages }}.-->
-<!--            </span>-->
-
-<!--            {% if locations.has_next %}-->
-<!--                <form method="POST" action="?page={{ locations.next_page_number }}&location_name={{ location_name }}&place_type={{ place_type }}">-->
-<!--                    {% csrf_token %}-->
-<!--                    <input type="hidden" name="place_type" value="{{ request.POST.place_type }}">-->
-<!--                    <input type="hidden" name="location_name" value="{{ request.POST.location_name }}">-->
-<!--                    <button type="submit">next</button>-->
-<!--                </form>-->
-<!--                <form method="POST" action="?page={{ locations.paginator.num_pages }}&location_name={{ location_name }}&place_type={{ place_type }}">-->
-<!--                    {% csrf_token %}-->
-<!--                    <input type="hidden" name="place_type" value="{{ request.POST.place_type }}">-->
-<!--                    <input type="hidden" name="location_name" value="{{ request.POST.location_name }}">-->
-<!--                    <button type="submit">last &raquo;</button>-->
-<!--                </form>-->
-<!--            {% endif %}-->
-<!--        </span>-->
-<!--    </div>-->
     {% else %}
 
     {% endif %}
