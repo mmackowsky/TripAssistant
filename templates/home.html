@@ -3,9 +3,10 @@
 {% block html_head %}
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
     <script src="https://kit.fontawesome.com/6095ccca98.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="author" content="colorlib.com">
@@ -15,6 +16,31 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'home/css/cards_style.css' %}">
+
+  <style>
+  .pagination {
+    display: inline-block;
+  }
+
+  .pagination button {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+  }
+
+  .pagination button.active {
+    background-color: #4272d7;
+    color: white;
+    border-radius: 5px;
+  }
+
+  .pagination button:hover:not(.active) {
+    background-color: #ddd;
+    border-radius: 5px;
+  }
+  </style>
+
   </head>
 {% endblock %}
 
@@ -23,7 +49,7 @@
   {% block content %}
     <div class="s01">
 
-      <form method="POST">
+      <form method="POST" action="?page=1&location_name={{ location_name }}&place_type={{ place_type }}">
         {% csrf_token %}
         <fieldset>
           <legend>Discover the Amazing City</legend>
@@ -48,51 +74,105 @@
   {% if form.is_valid %}
   <main>
 
-      <div class="all-container">
+    <div class="all-container">
+    {% for item in locations %}
+    <div class="card">
+        <div class="card-one">
+          <img class="card-img" src="https://images.unsplash.com/photo-1591699396114-d936888e470f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="Ephesus Picture">
+          <h6 class="place_type">{{ item.place_type }}</h6>
+          <h5>{{ item.location_name }}</h5>
 
-      {% for item in locations %}
-      <div class="card">
-          <div class="card-one">
-            <img class="card-img" src="https://images.unsplash.com/photo-1591699396114-d936888e470f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="Ephesus Picture">
-            <h6 class="guided">{{ item.place_type }}</h6>
-            <h5>{{ item.location_name }}</h5>
 
-
-            <div class="icon">
-              <i class="far fa-clock"> <span>{{ item.city }}</span></i><br>
-              <i class="fas fa-running"> <span>{{ item.street }} {{ item.house_number }}</span></i><br>
-              <i class="fas fa-user-friends"> <span>{{ item.postcode }} </span></i>
-            </div>
-            <div class="prices">
-              <span class="from">From</span>
-              <span class="price"><i class="fas fa-euro-sign"></i> 79</span>
-              <span class="person">per person</span>
-            </div>
-         </div>
-        </div>
-      {% endfor %}
-
-      <div class="pagination">
-       <span class="step-links">
-          {% if locations.has_previous %}
-              <a href="?page=1">&laquo; first</a>
-              <a href="?page={{ locations.previous_page_number }}">previous</a>
-          {% endif %}
-
-          <span class="current">
-              Page {{ locations.number }} of {{ locations.paginator.num_pages }}.
-          </span>
-
-          {% if locations.has_next %}
-              <a href="?page={{ locations.next_page_number }}">next</a>
-              <a href="?page={{ locations.paginator.num_pages }}">last &raquo;</a>
-          {% endif %}
-      </span>
+          <div class="icon">
+            <i class="fa fa-home"> <span>{{ item.city }}</span></i><br>
+            <i class="fa fa-road"> <span>{{ item.street }} {{ item.house_number }} <br> ZIP: {{ item.postcode }} </span></i><br>
+<!--            <i class="fas fa-user-friends"> <span>{{ item.postcode }} </span></i>-->
+            <i class="fa fa-map-marker"> <a href="http://maps.google.com/?q={{ item.location_name }}+{{ item.city }}" target="_blank"><span>Map Location</span></a></i>
+          </div>
+          <div class="btn-position">
+            <a href="{% url 'reviews' %}"><button class="button-10" role="button">Reviews</button></a>
+          </div>
+       </div>
+      </div>
+    {% endfor %}
     </div>
+
+    {% if locations %}
+
+    <div class="pagination justify-content-center">
+
+<!--			{% if locations.has_previous %}-->
+<!--			<form method="POST" action="?page={{ locations.previous_page_number }}">-->
+<!--				{% csrf_token %}-->
+<!--				<input type="hidden" name="place_type" value="{{ request.POST.place_type }}">-->
+<!--				<input type="hidden" name="location_name" value="{{ request.POST.location_name }}">-->
+<!--				<button type="submit">previous</button>-->
+<!--			</form>-->
+<!--			{% endif %}-->
+
+		{% for page_num in locations.paginator.page_range %}
+
+			<form method="POST" action="?page={{ page_num }}">
+				{% csrf_token %}
+				<input type="hidden" name="place_type" value="{{ request.POST.place_type }}">
+				<input type="hidden" name="location_name" value="{{ request.POST.location_name }}">
+				<button type="submit" {% if page_num == locations.number %}class="active"{% endif %}><span>{{ page_num }}</span></button>
+            </form>
+
+		{% endfor %}
+<!--			{% if locations.has_next %}-->
+<!--			<form method="POST" action="?page={{ locations.next_page_number }}">-->
+<!--				{% csrf_token %}-->
+<!--				<input type="hidden" name="place_type" value="{{ request.POST.place_type }}">-->
+<!--				<input type="hidden" name="location_name" value="{{ request.POST.location_name }}">-->
+<!--				<button type="submit">next</button>-->
+<!--			</form>-->
+<!--			{% endif %}-->
+
+
+	</div>
+<!--    <div class="pagination justify-content-center">-->
+<!--        <span class="step-links">-->
+<!--            {% if locations.has_previous %}-->
+<!--                <form method="POST" action="?page=1&location_name={{ location_name }}&place_type={{ place_type }}">-->
+<!--                    {% csrf_token %}-->
+<!--                    <input type="hidden" name="place_type" value="{{ request.POST.place_type }}">-->
+<!--                    <input type="hidden" name="location_name" value="{{ request.POST.location_name }}">-->
+<!--                    <button type="submit">&laquo; first</button>-->
+<!--                </form>-->
+<!--                <form method="POST" action="?page={{ locations.previous_page_number }}&location_name={{ location_name }}&place_type={{ place_type }}">-->
+<!--                    {% csrf_token %}-->
+<!--                    <input type="hidden" name="place_type" value="{{ request.POST.place_type }}">-->
+<!--                    <input type="hidden" name="location_name" value="{{ request.POST.location_name }}">-->
+<!--                    <button type="submit">previous</button>-->
+<!--                </form>-->
+<!--            {% endif %}-->
+
+<!--            <span class="current">-->
+<!--                Page {{ locations.number }} of {{ locations.paginator.num_pages }}.-->
+<!--            </span>-->
+
+<!--            {% if locations.has_next %}-->
+<!--                <form method="POST" action="?page={{ locations.next_page_number }}&location_name={{ location_name }}&place_type={{ place_type }}">-->
+<!--                    {% csrf_token %}-->
+<!--                    <input type="hidden" name="place_type" value="{{ request.POST.place_type }}">-->
+<!--                    <input type="hidden" name="location_name" value="{{ request.POST.location_name }}">-->
+<!--                    <button type="submit">next</button>-->
+<!--                </form>-->
+<!--                <form method="POST" action="?page={{ locations.paginator.num_pages }}&location_name={{ location_name }}&place_type={{ place_type }}">-->
+<!--                    {% csrf_token %}-->
+<!--                    <input type="hidden" name="place_type" value="{{ request.POST.place_type }}">-->
+<!--                    <input type="hidden" name="location_name" value="{{ request.POST.location_name }}">-->
+<!--                    <button type="submit">last &raquo;</button>-->
+<!--                </form>-->
+<!--            {% endif %}-->
+<!--        </span>-->
+<!--    </div>-->
+    {% else %}
+
+    {% endif %}
 
   </main>
   {% endif %}
-
-  {% endblock %}
-
-  </body>
+{% endblock %}
+</body>
