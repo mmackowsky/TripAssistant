@@ -1,0 +1,192 @@
+HTML CSSResult Skip Results Iframe
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+ }
+
+html {
+  font-family: 'Raleway', sans-serif;
+  font-size: 100%;
+}
+/* Colors */
+:root {
+    --place_type: #4272d7; /* h6 color */
+}
+/* --------------------------------------------------------*/
+/* Card Layout */
+.card {
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  height: 25rem;
+  width: 20rem;
+  margin: 3rem;
+}
+
+.card-img {
+  height: 12rem;
+  width: 20rem;
+  object-fit: cover;
+}
+
+/* tittle style */
+h2, h5, h6 {
+  margin-left: 1rem;
+}
+
+h2 {
+  font-weight: 600;
+}
+
+h5 {
+  font-weight: 500;
+  opacity: .9;
+}
+/* h2 style */
+h2 {
+  position: relative;
+  top: -1em;
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: 1.1px;
+}
+
+h5 {
+  position: relative;
+  top: -0.2em;
+  font-size: 16px;
+  font-weight: 500;
+  opacity: .8;
+}
+/* h6 style */
+h6 {
+  position: relative;
+  display: inline;
+  top: -1em;
+  font-size: 15px;
+  border-radius: 0.25em;
+  padding: .2rem;
+  color: white;
+  font-weight: 500;
+}
+
+.place_type {
+  border: 1px solid var(--place_type);
+  background-color: var(--place_type);
+}
+
+/* Icon Style */
+.icon {
+  position: relative;
+  /*top: -0.2em;*/
+  bottom: -0.5em;
+  right: -1em;
+  font-family: 'Raleway', sans-serif;
+  vertical-align: middle;
+}
+
+.fa-home, .fa-road, .fa-user-friends .fa-map-marker {
+  padding: 0.3rem;
+  font-size: 1rem;
+}
+
+span {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 500;
+  font-size: .9rem;
+  line-height: 1.2;
+  opacity: .8;
+}
+
+/* Price Style */
+.prices > .from {
+  position: relative;
+  /*top: -2em;*/
+  bottom: 10px;
+  right: -11.5em;
+  font-size: 20px;
+  opacity: .7;
+}
+
+.prices > .price {
+  position: relative;
+  /*top: -3.2em;*/
+  bottom: 70px;
+  right: -5.2em;
+  font-size: 32px;
+  opacity: .9;
+}
+
+.prices > .person {
+  position: relative;
+  /*top: -4.5em;*/
+  bottom: 40px;
+  right: -5.5em;
+  font-size: 16px;
+  opacity: .5;
+}
+
+/* Media Queries */
+@media (min-width: 1499px) {
+  /* For a screen > 1499px, this CSS will be read */
+  .all-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-area: 20px;
+    justify-content: center;
+    align-items: center;
+    margin-left: 1rem;
+  }
+}
+@media (min-width: 820px) and (max-width: 1499px) {
+  /* For a screen > 820px, and < 1499 this CSS will be read */
+  .all-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-area: 20px;
+    justify-content: center;
+    align-items: center;
+    margin: auto 2rem;
+  }
+}
+@media (max-width: 820px) {
+  /* For a screen < 820px, this CSS will be read */
+  .all-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-area: 20px;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+  }
+}
+
+.button-10 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+  border-radius: 6px;
+  border: none;
+
+  color: #fff;
+  background: linear-gradient(180deg, #4B91F7 0%, #367AF6 100%);
+   background-origin: border-box;
+  box-shadow: 0px 0.5px 1.5px rgba(54, 122, 246, 0.25), inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-10:focus {
+  box-shadow: inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2), 0px 0.5px 1.5px rgba(54, 122, 246, 0.25), 0px 0px 0px 3.5px rgba(58, 108, 217, 0.5);
+  outline: 0;
+}
+
+.btn-position {
+  position: relative;
+  bottom: 50px;
+  right: -195px;
+}

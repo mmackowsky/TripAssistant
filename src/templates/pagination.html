@@ -1,0 +1,50 @@
+
+{% load static %}
+
+  <head>
+  	<title>Button 08</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'home/css/pagination_ionicons.min.css' %}">
+	<link rel="stylesheet" href="{% static 'home/css/pagination_style.css' %}">
+  </head>
+
+  <body>
+
+	<div class="block-27">
+	<ul>
+		<li>
+			{% if locations.has_previous %}
+			<form method="POST" action="?page={{ locations.previous_page_number }}">
+				{% csrf_token %}
+				<input type="hidden" name="place_type" value="{{ request.POST.place_type }}">
+				<input type="hidden" name="location_name" value="{{ request.POST.location_name }}">
+				<button type="submit">previous</button>
+			</form>
+			{% endif %}
+		</li>
+		{% for page_num in locations.paginator.page_range %}
+		<li class="active">
+			<form method="POST" action="?page={{ locations.page_number }}">
+				{% csrf_token %}
+				<input type="hidden" name="place_type" value="{{ request.POST.place_type }}">
+				<input type="hidden" name="location_name" value="{{ request.POST.location_name }}">
+				<button type="submit"><span>{{ page_num }}</span></button>
+		<li>
+		{% endfor %}
+			{% if locations.has_next %}
+			<form method="POST" action="?page={{ locations.next_page_number }}">
+				{% csrf_token %}
+				<input type="hidden" name="place_type" value="{{ request.POST.place_type }}">
+				<input type="hidden" name="location_name" value="{{ request.POST.location_name }}">
+				<button type="submit">next</button>
+			</form>
+			{% endif %}
+		</li>
+	</ul>
+	</div>
+
+  </body>

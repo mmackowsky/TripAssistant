@@ -3,14 +3,14 @@ from typing import Any, Dict
 import requests
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views.generic.list import ListView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 
-from .forms import SearchForm, ReviewForm
-from .models import Location, Reviews
+from .forms import SearchForm
+from .models import Location
 from core import settings
 
 
@@ -89,32 +89,5 @@ class LocationListView(ListView):
                 'location_name': location_name,
                 'place_type': place_type
             })
+
         return render(self.request, "home.html", {'form': form})
-
-
-class ReviewListView(ListView):
-    model = Reviews
-    context_object_name = 'reviews'
-    template_name = 'reviews.html'
-    # paginate_by = 6
-
-    def get_reviews(self, request, location_id):
-        location = Location.objects.get(id=location_id)
-        reviews = Reviews.objects.filter(location=location)
-        return render(request, self.template_name, {'location': location, 'reviews': reviews})
-
-    @login_required()
-    def add_review(self, request):
-        if request.method == "POST":
-            review_form = ReviewForm(request.POST)
-
-            if review_form.is_valid():
-                review = review_form.save(commit=False)
-                review.user = request.user
-                review.save()
-                messages.info(request, "Review added.")
-                return redirect('place_reviews')
-        else:
-            review_form = ReviewForm()
-
-        return render(request, 'reviews.html', {'form': review_form})

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block html_head %}
+<head>
+  <link href="{% static 'review/css/style.css' %}" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro|Montez" rel="stylesheet">
+</head>
+{% endblock %}
+
+{% block review_content %}
+<body>
+
+<h3 class="centered" style="text-decoration: underline">{{ location_name }}</h3>
+
+<section class="section--reviews">
+  {% for review in reviews %}
+  <div class="review_item">
+    <div class="author">
+      <img src="https://raw.githubusercontent.com/paul-duvall/website_images/master/reviewer2.jpg" alt="Reviewer 1"/>
+      <h4>{{ review.user }}</h4>
+        <span>{{ review.date_posted }}</span>
+    </div>
+    <div class="review_words"><p>{{ review.content }}</p> </div>
+  </div>
+  {% endfor %}
+  {% if not reviews %}
+  <h1 class="centered">No reviews yet. Be the very first person and click button below!</h1>
+  {% endif %}
+
+</section>
+
+<div class="btn-position justify-content-center">
+  <a href="{% url 'add-review' location_id=location_id %}">
+    <button class="button-10" role="button" type="submit">Add review</button>
+  </a>
+</div>
+
+</body>
+{% endblock %}

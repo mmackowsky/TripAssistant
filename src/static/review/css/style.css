@@ -1,0 +1,147 @@
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+  color: #2c3033;
+}
+
+.section--reviews {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  background: transparent;
+  font-size: 1rem;
+}
+
+@media (min-width: 820px) and (max-width: 1499px) {
+  /* For a screen > 820px, and < 1499 this CSS will be read */
+  .all-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-area: 20px;
+    justify-content: center;
+    align-items: center;
+    margin: auto 2rem;
+  }
+}
+
+.review_item {
+  position: relative;
+  overflow: hidden;
+  margin: 10px;
+  min-width: 220px;
+  max-width: 350px;
+  with: 100%;
+  padding: 10px;
+}
+
+.author {
+  display: block;
+  position: relative;
+  margin: 0;
+  height: 80px;
+  padding: 0 35px;
+  z-index: 1;
+}
+
+.author img {
+  position: absolute;
+  display: block;
+  padding-right: 10px;
+  max-width: 100%;
+  height: 80px;
+  width: 80px;
+  border-radius: 50%;
+  right: 50%;
+}
+
+.author h4, .author span {
+  left: 50%;
+  position: absolute;
+}
+
+.author h4 {
+  position: absolute;
+  padding-bottom: 3px;
+  bottom: 50%;
+  margin: 0;
+  font-family: 'Montez', cursive;
+  font-size: 1.3rem;
+}
+
+.author span {
+  position: absolute;
+  top: 50%;
+  padding-top: 3px;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.review_words {
+  background: white;
+  -webkit-box-shadow: 2px 2px 10px 0px #867E72;
+  box-shadow: 2px 2px 10px 0px #867E72;
+  border-radius: 5px;
+  position: relative;
+  display: block;
+  margin: -40px 0 0 ;
+  padding: 65px 50px 35px 50px;
+  min-height: 130px;
+}
+
+.review_words:before,
+.review_words:after {
+  font-family: 'FontAwesome';
+  content: "\201C";
+  position: absolute;
+  font-size: 50px;
+  opacity: 0.3;
+  font-style: normal;
+}
+.review_words:before {
+  top: 55px;
+  left: 20px;
+}
+.review_words:after {
+  content: "\201D";
+  right: 20px;
+  bottom: 5px;
+}
+
+.button-10 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+  border-radius: 6px;
+  border: none;
+  margin-top: 20px;
+
+  color: #fff;
+  background: linear-gradient(180deg, #4B91F7 0%, #367AF6 100%);
+   background-origin: border-box;
+  box-shadow: 0px 0.5px 1.5px rgba(54, 122, 246, 0.25), inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-10:focus {
+  box-shadow: inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2), 0px 0.5px 1.5px rgba(54, 122, 246, 0.25), 0px 0px 0px 3.5px rgba(58, 108, 217, 0.5);
+  outline: 0;
+}
+
+.btn-position {
+  position: absolute; /* Ustalamy pozycję absolutną dla przycisku */
+  bottom: -50px; /* Przycisk będzie przylegać do dolnej krawędzi sekcji */
+  left: 50%; /* Przycisk będzie w połowie szerokości sekcji */
+  transform: translateX(-50%); /* Wycentrowanie przycisku poziomo */
+}
+
+.centered {
+  position: relative;
+  text-align: center;
+  font-style: italic;
+  color: white;
+  top: -10px;
+}
