@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Avg
 
 
 class Location(models.Model):
@@ -12,4 +13,9 @@ class Location(models.Model):
         return self.location_name
 
     class Meta:
-        ordering = ['location_name']
+        ordering = ["location_name"]
+
+    @property
+    def avg_rating(self):
+        avg_rating = self.reviews.aggregate(Avg("stars"))["stars__avg"]
+        return round(avg_rating, 2) if avg_rating else "Not rated yet"
