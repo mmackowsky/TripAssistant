@@ -1,4 +1,10 @@
 # TripAssistant
+* [General info])(#general-info)
+* [Technologies](#technologies)
+* [Setup](#setup)
+* [Application view](#application-view)
+* [Sources](#sources)
+
 ## General info
 <p>An application that allows searching for places that you are looking for in any city of world. After typing phrases you will get card with:
 <li> Place name </li>
@@ -29,3 +35,6 @@
 ![password_reset](https://github.com/mmackowsky/TripAssistant/assets/123114901/08ce3e0f-c53f-4dd8-9ea1-8fda418948ab)
 ![register](https://github.com/mmackowsky/TripAssistant/assets/123114901/cad6cacc-1190-47bf-953b-ba4f6ce7e0f7)
 ![reviews](https://github.com/mmackowsky/TripAssistant/assets/123114901/f1ee8515-2559-4e35-946d-d951a56c9f0b)
+
+## Sources
+
