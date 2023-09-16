@@ -1,5 +1,5 @@
 # TripAssistant
-* [General info])(#general-info)
+* [General info](#general-info)
 * [Technologies](#technologies)
 * [Setup](#setup)
 * [Application view](#application-view)
