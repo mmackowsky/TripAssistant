@@ -22,7 +22,7 @@
 ## Setup
 
 ## Application view
-<img src="C:\Users\user\Desktop\TripAssistantPhotosToGH\home_before_search.jpg">
+<img src="[C:\Users\user\Desktop\TripAssistantPhotosToGH\home_before_search.jpg](https://photos.google.com/photo/AF1QipM_RENqH18Abv743VFTJsK6viqhh0TQf5miQtoL)">
 <img src="C:\Users\user\Desktop\TripAssistantPhotosToGH\home_after_search.jpg">
 <img src="C:\Users\user\Desktop\TripAssistantPhotosToGH\home_with_footer.jpg">
 <img src="C:\Users\user\Desktop\TripAssistantPhotosToGH\reviews.jpg">
