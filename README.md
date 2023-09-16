@@ -23,7 +23,7 @@
 
 ## Application view
 ![home_before_search](https://github.com/mmackowsky/TripAssistant/assets/123114901/bbca9066-e251-456d-82de-26ad7c6ec3e8)
-![home_after_search](https://github.com/mmackowsky/TripAssistant/assets/123114901/52f67086-30fd-4831-a7cb-0877d74f0438)
+![home_after_search](https://github.com/mmackowsky/TripAssistant/assets/123114901/ae165e76-d57a-4eb8-8e95-e00ae96fc403)
 ![home_with_footer](https://github.com/mmackowsky/TripAssistant/assets/123114901/6c8b41fb-1223-4b6f-b5bd-ab2bbddd35e2)
 ![login](https://github.com/mmackowsky/TripAssistant/assets/123114901/75615e8a-89e3-4b07-9308-fbae86db451f)
 ![password_reset](https://github.com/mmackowsky/TripAssistant/assets/123114901/08ce3e0f-c53f-4dd8-9ea1-8fda418948ab)
