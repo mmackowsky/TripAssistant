@@ -20,15 +20,18 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include, path
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    # path('', include('assistant.urls')),
-    path('', include('users.urls')),
-    path('', include('locations.urls')),
-    path('', include('reviews.urls')),
-    path('', include('locations_images.urls')),
-    path('social-auth/', include('social_django.urls', namespace="social")),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns = (
+    [
+        path("admin/", admin.site.urls),
+        path("", include("users.urls")),
+        path("", include("locations.urls")),
+        path("", include("reviews.urls")),
+        path("", include("locations_images.urls")),
+        path("social-auth/", include("social_django.urls", namespace="social")),
+    ]
+    + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+)
 
 
 urlpatterns += staticfiles_urlpatterns()
