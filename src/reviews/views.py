@@ -2,13 +2,11 @@ from typing import List, Union
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.core.exceptions import ImproperlyConfigured
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.http import HttpRequest, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import CreateView, DeleteView, UpdateView
-from django.views.generic.list import ListView
+from django.shortcuts import redirect, render
+from django.views.generic import DeleteView, UpdateView
 
 from locations.models import Location
 
@@ -47,7 +45,7 @@ def get_reviews(request: HttpRequest, location_id: int) -> render:
     )
 
 
-@login_required()
+@login_required
 def add_review(request: HttpRequest, location_id: int) -> render:
     location = Location.objects.get(id=location_id)
     if request.method == "POST":
@@ -67,6 +65,8 @@ def add_review(request: HttpRequest, location_id: int) -> render:
             review.save()
             messages.info(request, "Review added.")
             return redirect("reviews", location_id=location_id)
+        else:
+            print(review_form.errors)
     else:
         review_form = ReviewForm()
 
@@ -77,9 +77,12 @@ def add_review(request: HttpRequest, location_id: int) -> render:
     )
 
 
-class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class ReviewDeleteView(LoginRequiredMixin, DeleteView):
     model = Reviews
     template_name = "reviews/delete_confirm.html"
+
+    def get_queryset(self):
+        return Reviews.objects.filter(user=self.request.user.profile)
 
     def get_success_url(self) -> str:
         review = self.get_object()
@@ -91,25 +94,26 @@ class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         messages.success(self.request, "Review delete successfully!")
         return HttpResponseRedirect(success_url)
 
-    def test_func(self) -> bool:
-        review = self.get_object()
-        return self.request.user.profile == review.user
 
-
-class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class ReviewUpdateView(LoginRequiredMixin, UpdateView):
     model = Reviews
-    template_name = "reviews/add_review.html"
-    fields = ["content", "location"]
+    template_name = "reviews/edit_review.html"
+    fields = ["content", "stars"]
+
+    def get_queryset(self):
+        return Reviews.objects.filter(user=self.request.user.profile)
 
     def get_success_url(self) -> str:
         review = self.get_object()
         return "/reviews/{}".format(review.location_id)
 
-    def form_valid(self, form) -> HttpResponseRedirect:
+    def form_valid(self, form):
+        success_url = self.get_success_url()
         form.instance.user.profile = self.request.user.profile
+        form.save()
         messages.success(self.request, "Review successfully updated!")
-        return super().form_valid(form)
+        return HttpResponseRedirect(success_url)
 
-    def test_func(self) -> bool:
-        review = self.get_object()
-        return self.request.user.profile == review.user
+    def form_invalid(self, form) -> None:
+        print(form.errors)
+        super().form_invalid(form)
