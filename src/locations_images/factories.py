@@ -26,8 +26,6 @@ class LocationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Location
 
-    # Tutaj dodaj odpowiednie pola i wartości, które chcesz użyć do utworzenia obiektu Location
-
 
 class ImagesFactory(factory.django.DjangoModelFactory):
     class Meta:
