@@ -1,30 +1,37 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.http import HttpResponseRedirect
+from django.views.generic import DeleteView
+from django.views.generic.edit import FormView
 
-
-from .forms import ImageForm
 from locations.models import Location
 
+from .forms import MultiUploadForm
+from .models import Images
 
-# Create your views here.
-@login_required()
-def add_image(request, location_id):
-    location = Location.objects.get(id=location_id)
-    if request.method == "POST":
-        image_form = ImageForm(request.POST, request.FILES)
 
-        if image_form.is_valid():
-            image = image_form.save(commit=False)
-            image.uploaded_by = request.user.profile
-            image.location = location
-            image.save()
-            messages.info(request, "Image added.")
-            return redirect('add_image', location_id=location_id)
-    else:
-        image_form = ImageForm()
+class MultiUploadView(FormView):
+    template_name = "locations_images/add_image.html"
+    form_class = MultiUploadForm
+    success_url = "/"
 
-    return render(request, 'locations_images/add_image.html', {
-        'form': image_form,
-        'location_name': location.location_name
-    })
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        location_id = self.kwargs.get("location_id")
+        if location_id:
+            location = Location.objects.get(pk=location_id)
+            images = Images.objects.filter(location=location)
+
+            context["location"] = location
+            context["images"] = images
+
+        return context
+
+    def form_valid(self, form):
+        for each in form.cleaned_data["attachments"]:
+            location_id = self.kwargs["location_id"]
+            uploaded_by = self.request.user.profile
+            Images.objects.create(
+                image=each, location_id=location_id, uploaded_by=uploaded_by
+            )
+        return super(MultiUploadView, self).form_valid(form)
