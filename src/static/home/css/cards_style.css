@@ -185,8 +185,14 @@ span {
   outline: 0;
 }
 
-.btn-position {
+.btn-position-review {
   position: relative;
   bottom: 50px;
+  right: -195px;
+}
+
+.btn-position-image {
+  position: relative;
+  bottom: 70px;
   right: -195px;
 }
