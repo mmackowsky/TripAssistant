@@ -1,7 +1,7 @@
 from django.urls import path
 
-from .views import add_image
+from .views import MultiUploadView
 
 urlpatterns = [
-    path('add-image/<int:location_id>', add_image, name="add_image")
+    path("add-image/<int:location_id>", MultiUploadView.as_view(), name="add-image")
 ]
