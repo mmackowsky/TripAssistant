@@ -1,0 +1,143 @@
+{% extends 'home.html' %}
+{% load static %}
+{% block html_head %}
+<head>
+<style>
+textarea {
+  position: relative;
+  top: 100px;
+  width: 100%;
+  height: 150px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  font-size: 16px;
+  resize: none;
+}
+p {
+  position: relative;
+  top: 100px;
+}
+
+.button-10 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+  border-radius: 6px;
+  border: none;
+  margin-top: 20px;
+
+  color: #fff;
+  background: linear-gradient(180deg, #4B91F7 0%, #367AF6 100%);
+   background-origin: border-box;
+  box-shadow: 0px 0.5px 1.5px rgba(54, 122, 246, 0.25), inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-10:focus {
+  box-shadow: inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2), 0px 0.5px 1.5px rgba(54, 122, 246, 0.25), 0px 0px 0px 3.5px rgba(58, 108, 217, 0.5);
+  outline: 0;
+}
+
+.btn-position {
+  position: absolute; /* Ustalamy pozycję absolutną dla przycisku */
+  bottom: -170px; /* Przycisk będzie przylegać do dolnej krawędzi sekcji */
+  left: 86%; /* Przycisk będzie w połowie szerokości sekcji */
+  transform: translateX(-50%); /* Wycentrowanie przycisku poziomo */
+}
+
+h3 {
+  position: relative;
+  text-align: center;
+  font-style: italic;
+  color: white;
+  top: 50px;
+}
+
+
+*{
+    margin: 0;
+    padding: 0;
+}
+.rate {
+    position: absolute;
+    float: left;
+    left: 45.5%;
+    top: 150px;
+    height: 46px;
+    padding: 0 10px;
+}
+.rate:not(:checked) > input {
+    position:absolute;
+    top:-9999px;
+}
+.rate:not(:checked) > label {
+    float:right;
+    width:1em;
+    overflow:hidden;
+    white-space:nowrap;
+    cursor:pointer;
+    font-size:30px;
+    color:#ccc;
+}
+.rate:not(:checked) > label:before {
+    content: '★ ';
+}
+.rate > input:checked ~ label {
+    color: #367AF6;
+}
+.rate:not(:checked) > label:hover,
+.rate:not(:checked) > label:hover ~ label {
+    color: rgba(58, 108, 217, 0.5);
+}
+.rate > input:checked + label:hover,
+.rate > input:checked + label:hover ~ label,
+.rate > input:checked ~ label:hover,
+.rate > input:checked ~ label:hover ~ label,
+.rate > label:hover ~ input:checked ~ label {
+    color: rgba(58, 108, 217, 0.5);
+}
+
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+{% endblock %}
+{% block content %}
+<body>
+
+<form method="POST">
+  {% csrf_token %}
+  <h3>{{ object.location.location_name }}</h3>
+
+    <div class="rate">
+        <input type="radio" id="star5" name="stars" value="5" />
+        <label for="star5" title="text">5 stars</label>
+        <input type="radio" id="star4" name="stars" value="4" />
+        <label for="star4" title="text">4 stars</label>
+        <input type="radio" id="star3" name="stars" value="3" />
+        <label for="star3" title="text">3 stars</label>
+        <input type="radio" id="star2" name="stars" value="2" />
+        <label for="star2" title="text">2 stars</label>
+        <input type="radio" id="star1" name="stars" value="1" />
+        <label for="star1" title="text">1 star</label>
+    </div>
+
+  <label for="content"></label>
+
+  <textarea name="content" id="content">{{ object.content }}</textarea>
+  <div class="btn-position justify-content-center">
+    <button class="button-10" role="button" type="submit">Edit</button>
+  </div>
+</form>
+
+</body>
+{% endblock %}
