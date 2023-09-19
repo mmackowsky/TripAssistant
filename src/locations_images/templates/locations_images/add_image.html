@@ -99,12 +99,6 @@ h3 {
                   <p style="position: relative; top: 40px; left: 70px;">
                       <span style="color: white; font: italic;">Uploaded by: {{ image.uploaded_by }}</span>
                   </p>
-                {% if user.is_authenticated == image.uploaded_by %}
-                <form method="POST" action="{% url 'delete_image' image.id %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-                {% endif %}
                 </div>
 
               </div>
