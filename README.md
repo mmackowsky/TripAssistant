@@ -23,10 +23,21 @@
 <li>CSS</li>
 <li>Bootstrap</li>
 <li>Nominatim API</li>
-<li>Docker</li>
+<li>Docker / Docker-Compose</li>
 </ul>
 
 ## Setup
+Info about required keys/data in file .env.dist <br/>
+GIT: <br/>
+Clone repository
+```git clone https://github.com/mmackowsky/TripAssistant.git``` <br/>
+Install requirements
+```pip install requirements.txt``` <br/>
+Make migrations
+```python manage.py makemigrations``` -> ```python manage.py migrate``` <br/><br/>
+
+Docker/Docker Compose: <br/>
+```docker-compose build``` -> ```docker-compose up```
 
 ## Application view
 ![home_before_search](https://github.com/mmackowsky/TripAssistant/assets/123114901/bbca9066-e251-456d-82de-26ad7c6ec3e8)
@@ -38,4 +49,5 @@
 ![reviews](https://github.com/mmackowsky/TripAssistant/assets/123114901/f1ee8515-2559-4e35-946d-d951a56c9f0b)
 
 ## Sources
-
+Templates source and inspiration https://colorlib.com, https://codepen.io <br/>
+Images downloaded from Google in presentation purpose.
