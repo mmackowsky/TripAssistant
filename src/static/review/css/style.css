@@ -7,21 +7,12 @@ body {
   position: relative;
   display: flex;
   justify-content: center;
+  text-align: center;
   flex-wrap: wrap;
   background: transparent;
   font-size: 1rem;
-}
-
-@media (min-width: 820px) and (max-width: 1499px) {
-  /* For a screen > 820px, and < 1499 this CSS will be read */
-  .all-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-area: 20px;
-    justify-content: center;
-    align-items: center;
-    margin: auto 2rem;
-  }
+  width: 1200px;
+  margin: 0 auto;
 }
 
 .review_item {
@@ -132,10 +123,10 @@ body {
 }
 
 .btn-position {
-  position: absolute; /* Ustalamy pozycję absolutną dla przycisku */
-  bottom: -50px; /* Przycisk będzie przylegać do dolnej krawędzi sekcji */
-  left: 50%; /* Przycisk będzie w połowie szerokości sekcji */
-  transform: translateX(-50%); /* Wycentrowanie przycisku poziomo */
+  position: absolute;
+  bottom: -50px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .centered {
