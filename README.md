@@ -40,13 +40,13 @@ Docker/Docker Compose: <br/>
 ```docker-compose build``` -> ```docker-compose up```
 
 ## Application view
-![home_before_search](https://github.com/mmackowsky/TripAssistant/assets/123114901/bbca9066-e251-456d-82de-26ad7c6ec3e8)
-![home_after_search](https://github.com/mmackowsky/TripAssistant/assets/123114901/ae165e76-d57a-4eb8-8e95-e00ae96fc403)
-![home_with_footer](https://github.com/mmackowsky/TripAssistant/assets/123114901/6c8b41fb-1223-4b6f-b5bd-ab2bbddd35e2)
-![login](https://github.com/mmackowsky/TripAssistant/assets/123114901/75615e8a-89e3-4b07-9308-fbae86db451f)
-![password_reset](https://github.com/mmackowsky/TripAssistant/assets/123114901/08ce3e0f-c53f-4dd8-9ea1-8fda418948ab)
-![register](https://github.com/mmackowsky/TripAssistant/assets/123114901/cad6cacc-1190-47bf-953b-ba4f6ce7e0f7)
-![reviews](https://github.com/mmackowsky/TripAssistant/assets/123114901/f1ee8515-2559-4e35-946d-d951a56c9f0b)
+<img src="https://github.com/mmackowsky/TripAssistant/assets/123114901/9489b10b-8006-47ba-9c6e-20623f6ac08c" alt="before search">
+<img src="https://github.com/mmackowsky/TripAssistant/assets/123114901/ad8f3b4e-b4b7-49a4-a8cf-23e293bde985" alt="after search">
+<img src="https://github.com/mmackowsky/TripAssistant/assets/123114901/96fe55c1-8e85-4e3e-a7e0-e32dab5721fe" alt="with footer">
+<img src="https://github.com/mmackowsky/TripAssistant/assets/123114901/e5e9daa2-ed1d-418b-a111-0f9606010834" alt="login">
+<img src="https://github.com/mmackowsky/TripAssistant/assets/123114901/8398b9e4-37b2-48ea-af22-f5508f65d780" alt="register">
+<img src="https://github.com/mmackowsky/TripAssistant/assets/123114901/065bd09c-1be2-4c58-9f5f-8bc3f6830948" alt="password reset">
+<img src="https://github.com/mmackowsky/TripAssistant/assets/123114901/d071bb9b-fe98-44d4-a809-40fcf6e04ec1" alt="reviews">
 
 ## Sources
 Templates source and inspiration https://colorlib.com, https://codepen.io <br/>
