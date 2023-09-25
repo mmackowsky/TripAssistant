@@ -1,7 +1,6 @@
+import boto3
+from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import HttpResponseRedirect
-from django.views.generic import DeleteView
 from django.views.generic.edit import FormView
 
 from locations.models import Location
@@ -31,7 +30,14 @@ class MultiUploadView(FormView):
         for each in form.cleaned_data["attachments"]:
             location_id = self.kwargs["location_id"]
             uploaded_by = self.request.user.profile
+
+            # Sending to S3
+            s3 = boto3.client("s3")
+            file_name = each.name
+            s3.upload_fileobj(each, settings.AWS_STORAGE_BUCKET_NAME, file_name)
+
             Images.objects.create(
-                image=each, location_id=location_id, uploaded_by=uploaded_by
+                image=file_name, location_id=location_id, uploaded_by=uploaded_by
             )
+            messages.success(self.request, "Successful upload!")
         return super(MultiUploadView, self).form_valid(form)
