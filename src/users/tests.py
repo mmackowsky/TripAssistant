@@ -17,7 +17,6 @@ class UsersViewsTest(TestCase):
     def test_signup_view(self):
         response = self.client.get(reverse("signup"))
         self.assertEqual(response.status_code, 200)
-        # self.assertTemplateUsed(response, 'xyz')
 
         response = self.client.post(
             reverse("signup"),
