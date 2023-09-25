@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
+import boto3
 import environ
 from django.contrib.messages import constants as messages
 from django.core.management.utils import get_random_secret_key
@@ -22,9 +23,8 @@ from .env import env
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 
-environ.Env.read_env(os.path.join(ROOT_DIR, ".env"))
+environ.Env.read_env(os.path.join(BASE_DIR.parent, ".env"))
 
 
 # Quick-start development settings - unsuitable for production
@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "sslserver",
     "social_django",
     "django_extensions",
+    "storages",
 ]
 
 INSTALLED_EXTENSIONS = ["users", "locations", "reviews", "locations_images"]
@@ -219,3 +220,16 @@ MESSAGE_TAGS = {
 NOMINATIM_API_KEY = env("NOMINATIM_API_KEY")
 
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
+
+AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
+AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME")
+
+# Settings for S3
+AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+AWS_DEFAULT_ACL = "public-read"
+AWS_QUERYSTRING_AUTH = False
+
+# Backend config to storage in S3
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
