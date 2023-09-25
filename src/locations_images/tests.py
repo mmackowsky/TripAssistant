@@ -20,7 +20,7 @@ class MultiUploadViewTest(TestCase):
         image1 = ImagesFactory(location=self.location, uploaded_by=self.profile)
         image2 = ImagesFactory(location=self.location, uploaded_by=self.profile)
 
-        data = {"attachments": [image1.image.path, image2.image.path]}
+        data = {"attachments": [image1.image.url, image2.image.url]}
 
         response = self.client.post(
             reverse("add-image", args=[self.location.id]), data=data, follow=True
