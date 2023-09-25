@@ -1,5 +1,9 @@
+import os
+from tempfile import TemporaryDirectory
 from typing import Union
 
+import boto3
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
@@ -8,6 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.mail import EmailMessage
 from django.http import HttpRequest
 from django.shortcuts import redirect, render
@@ -110,8 +115,25 @@ def logout_request(request: HttpRequest) -> redirect:
     return redirect("login")
 
 
+def save_to_s3(profile_image: InMemoryUploadedFile) -> None:
+    with TemporaryDirectory() as temp_dir:
+        temp_file_path = os.path.join(temp_dir, profile_image.name)
+
+        # Saving InMemoryUploadedFile to temp_file
+        with open(temp_file_path, "wb") as temp_file:
+            temp_file.write(profile_image.read())
+
+        # Sending to S3
+        s3 = boto3.client("s3")
+        s3.upload_file(
+            temp_file_path,
+            settings.AWS_STORAGE_BUCKET_NAME,
+            profile_image.name,
+        )
+
+
 @login_required
-def profile(request: HttpRequest) -> Union[render, redirect]:
+def profile(request: HttpRequest) -> render:
     if request.method == "POST":
         user_form = UserUpdateForm(request.POST, instance=request.user)
         profile_form = ProfileUpdateForm(
@@ -119,9 +141,16 @@ def profile(request: HttpRequest) -> Union[render, redirect]:
         )
 
         if user_form.is_valid() and profile_form.is_valid():
+            profile_image = profile_form.cleaned_data.get("image")
+
+            # Temporary directory
+            save_to_s3(profile_image)
+
+            # Save data
             user_form.save()
             profile_form.save()
-            messages.success(request, "Your profile has been updated!")
+
+            messages.success(request, "Successful update")
             return redirect("profile")
     else:
         user_form = UserUpdateForm(instance=request.user)
