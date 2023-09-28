@@ -7,7 +7,7 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
 from .models import Profile
-from .views import save_to_s3, get_user_by_uid
+from .views import ProfileView, ActivateView
 
 
 class UsersViewsTest(TestCase):
@@ -53,7 +53,7 @@ class UsersViewsTest(TestCase):
 
         with self.subTest():
             try:
-                save_to_s3(uploaded_file)
+                ProfileView()._save_to_s3(uploaded_file)
             except Exception as e:
                 self.fail(f"save_to_s3 raised an exception: {str(e)}")
 
@@ -94,11 +94,11 @@ class UsersViewsTest(TestCase):
         uid = urlsafe_base64_encode(force_bytes(user.pk))
 
         # Test with valid UID
-        result = get_user_by_uid(uid)
+        result = ActivateView().get_user_by_uid(uid64=uid)
         self.assertEqual(result, user)
 
         # Test with invalid UID
-        result = get_user_by_uid("invalid_uid")
+        result = ActivateView().get_user_by_uid("invalid_uid")
         self.assertIsNone(result)
 
     def test_reset_password_view_template_used(self):
