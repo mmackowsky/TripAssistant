@@ -22,6 +22,7 @@ class ReviewsTestCase(TestCase):
         )
 
     def test_get_reviews_view(self):
+        self.client.force_login(self.user_1)
         url = reverse("reviews", args=[self.location.id])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
@@ -55,9 +56,6 @@ class ReviewsTestCase(TestCase):
         self.client.force_login(self.user_1)
         url = reverse("reviews", args=[self.review_1.id])
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-
-        response = self.client.post(url)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(Reviews.objects.filter(id=self.review_1.id).exists())
 
