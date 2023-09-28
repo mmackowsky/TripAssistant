@@ -2,20 +2,20 @@ from django.contrib.auth import views as auth_views
 from django.urls import path
 
 from .views import (
+    ActivateView,
+    LoginView,
+    LogoutView,
+    ProfileView,
     ResetPasswordView,
-    activate,
-    login_request,
-    logout_request,
-    profile,
-    signup,
+    SignupView,
 )
 
 urlpatterns = [
-    path("signup/", signup, name="signup"),
-    path("signup/<uid64>/<token>/activate", activate, name="activate"),
-    path("login/", login_request, name="login"),
-    path("logout/", logout_request, name="logout"),
-    path("profile/", profile, name="profile"),
+    path("signup/", SignupView.as_view(), name="signup"),
+    path("signup/<uid64>/<token>/activate", ActivateView.as_view(), name="activate"),
+    path("login/", LoginView.as_view(), name="login"),
+    path("logout/", LogoutView.as_view(), name="logout"),
+    path("profile/", ProfileView.as_view(), name="profile"),
     path("password-reset/", ResetPasswordView.as_view(), name="password-reset"),
     path(
         "password-reset-confirm/<uidb64>/<token>",
