@@ -7,7 +7,7 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
 from .models import Profile
-from .views import ProfileView, ActivateView
+from .views import ActivateView, ProfileView
 
 
 class UsersViewsTest(TestCase):
