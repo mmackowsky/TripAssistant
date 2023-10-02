@@ -1,3 +1,4 @@
+import logging
 import os
 from tempfile import TemporaryDirectory
 from typing import Union
@@ -44,6 +45,7 @@ class SignupView(View):
                 request, "Please confirm your email address to complete registration"
             )
             return redirect("login")
+        logging.error("Form is not valid.")
         return render(request, "users/signup.html", {"form": form})
 
     def send_email(self, request: HttpRequest, user: User, to_email: str) -> None:
@@ -60,6 +62,7 @@ class SignupView(View):
         )
         email = EmailMessage(mail_subject, message, to=[to_email])
         email.send()
+        logging.debug("Email send in activation case.")
 
 
 class ActivateView(View):
@@ -79,7 +82,8 @@ class ActivateView(View):
         try:
             uid = force_str(urlsafe_base64_decode(uid64))
             return User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist) as e:
+            logging.error(f"Issue in get_user_by_uid: {e}")
             return None
 
     def _activate_user(self, user: User, token: str) -> bool:
@@ -87,6 +91,7 @@ class ActivateView(View):
             user.is_active = True
             user.save()
             return True
+        logging.warning("User is not activate")
         return False
 
 
@@ -119,6 +124,7 @@ class ProfileView(View):
 
             messages.success(request, "Successful update")
             return redirect("profile")
+        logging.error("Form is not valid")
         return render(
             request,
             "users/profile.html",
@@ -126,6 +132,7 @@ class ProfileView(View):
         )
 
     def _save_to_s3(self, profile_image: InMemoryUploadedFile) -> None:
+        logging.debug("Saving profile image to S3")
         with TemporaryDirectory() as temp_dir:
             temp_file_path = os.path.join(temp_dir, profile_image.name)
 
