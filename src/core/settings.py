@@ -34,7 +34,7 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = ["trip-assistant.eu-north-1.elasticbeanstalk.com"]
+ALLOWED_HOSTS = ["trip-assistant.eu-north-1.elasticbeanstalk.com", "127.0.0.1"]
 
 
 # Application definition
@@ -231,3 +231,33 @@ AWS_QUERYSTRING_AUTH = False
 
 # Backend config to storage in S3
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
+LOGGING_DIR = os.path.join(BASE_DIR, "logs")
+if not os.path.exists(LOGGING_DIR):
+    os.makedirs(LOGGING_DIR)
+
+LOGGING_LEVEL = "DEBUG"
+LOG_FILE = os.path.join(LOGGING_DIR, "django.log")
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "file": {
+            "level": LOGGING_LEVEL,
+            "class": "logging.FileHandler",
+            "filename": LOG_FILE,
+            "formatter": "verbose",
+        },
+    },
+    "root": {
+        "handlers": ["file"],
+        "level": LOGGING_LEVEL,
+    },
+}
