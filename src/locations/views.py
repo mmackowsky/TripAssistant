@@ -1,3 +1,4 @@
+import logging
 from typing import Any, Dict, List, Tuple
 
 import requests
@@ -31,7 +32,8 @@ class LocationListView(ListView):
                     "postcode": item["address"]["postcode"],
                 }
                 parsed_data.append(parsed_item)
-            except KeyError:
+            except KeyError as e:
+                logging.error(f"{e} while parsing response data.")
                 continue
         return parsed_data
 
@@ -45,7 +47,7 @@ class LocationListView(ListView):
             response.raise_for_status()
             return response.json()
         except requests.RequestException as e:
-            print(f"API request failed: {e}")
+            logging.error(f"API request failed: {e}")
             return []
 
     def fetch_and_save_from_api(self, place_type: str, location_name: str) -> None:
@@ -65,6 +67,7 @@ class LocationListView(ListView):
         queryset = super().get_queryset()
         form = SearchForm(self.request.POST)
         if form.is_valid():
+            logging.debug("Filtering results.")
             location_name, place_type = self._extract_form_data(form)
             queryset = Location.objects.filter(
                 Q(city__icontains=location_name) & Q(place_type=place_type)
@@ -93,6 +96,7 @@ class LocationListView(ListView):
         if form.is_valid():
             queryset = self.get_queryset()
             if not queryset:
+                logging.warning("Places not found")
                 messages.warning(self.request, "Places not found.")
 
             location_name, place_type = self._extract_form_data(form)
@@ -100,6 +104,7 @@ class LocationListView(ListView):
             page_number = self.request.GET.get("page")
             page_obj = paginator.get_page(page_number)
 
+            logging.debug(f"Rendering results for {location_name}, {place_type}")
             return render(
                 self.request,
                 "home.html",
