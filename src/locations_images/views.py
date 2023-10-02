@@ -1,3 +1,5 @@
+import logging
+
 import boto3
 from django.conf import settings
 from django.contrib import messages
@@ -35,6 +37,7 @@ class MultiUploadView(FormView):
             s3 = boto3.client("s3")
             file_name = each.name
             s3.upload_fileobj(each, settings.AWS_STORAGE_BUCKET_NAME, file_name)
+            logging.debug("File saved to S3.")
 
             Images.objects.create(
                 image=file_name, location_id=location_id, uploaded_by=uploaded_by
