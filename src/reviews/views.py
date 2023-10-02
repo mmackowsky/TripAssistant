@@ -1,3 +1,4 @@
+import logging
 from typing import List, Union
 
 from django.contrib import messages
@@ -23,6 +24,7 @@ class ReviewsListView(LoginRequiredMixin, View):
         location = Location.objects.get(id=location_id)
         reviews = Reviews.objects.filter(location=location)
         average_rating = self.get_stars_average(reviews)
+        logging.debug(f"Filtering reviews by {location} id.")
 
         paginator = Paginator(reviews, 12)
         page_number = request.GET.get("page")
@@ -83,6 +85,10 @@ class AddReviewView(LoginRequiredMixin, CreateView):
         context["location_name"] = location.location_name
         return context
 
+    def form_invalid(self, form) -> None:
+        logging.error(form.errors)
+        super().form_invalid(form)
+
 
 class ReviewDeleteView(LoginRequiredMixin, DeleteView):
     model = Reviews
@@ -100,6 +106,10 @@ class ReviewDeleteView(LoginRequiredMixin, DeleteView):
         self.object.delete()
         messages.success(self.request, "Review delete successfully!")
         return HttpResponseRedirect(success_url)
+
+    def form_invalid(self, form) -> None:
+        logging.error(form.errors)
+        super().form_invalid(form)
 
 
 class ReviewUpdateView(LoginRequiredMixin, UpdateView):
@@ -122,5 +132,5 @@ class ReviewUpdateView(LoginRequiredMixin, UpdateView):
         return HttpResponseRedirect(success_url)
 
     def form_invalid(self, form) -> None:
-        print(form.errors)
+        logging.error(form.errors)
         super().form_invalid(form)
