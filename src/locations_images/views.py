@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.views.generic.edit import FormView
 
-from locations.models import Location
+from src.locations.models import Location
 
 from .forms import MultiUploadForm
 from .models import Images
