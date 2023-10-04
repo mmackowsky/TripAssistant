@@ -34,7 +34,7 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -52,7 +52,12 @@ INSTALLED_APPS = [
     "storages",
 ]
 
-INSTALLED_EXTENSIONS = ["users", "locations", "reviews", "locations_images"]
+INSTALLED_EXTENSIONS = [
+    "src.users",
+    "src.locations",
+    "src.reviews",
+    "src.locations_images",
+]
 
 INSTALLED_APPS += INSTALLED_EXTENSIONS
 
@@ -112,6 +117,13 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": "mydatabase",
+#     }
+# }
 
 DATABASES = {
     "default": {
