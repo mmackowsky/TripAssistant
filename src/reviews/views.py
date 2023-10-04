@@ -11,7 +11,7 @@ from django.urls import reverse
 from django.views import View
 from django.views.generic import CreateView, DeleteView, UpdateView
 
-from locations.models import Location
+from src.locations.models import Location
 
 from .forms import ReviewForm
 from .models import Reviews
