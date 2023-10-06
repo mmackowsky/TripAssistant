@@ -36,6 +36,7 @@ DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = ["*"]
 
+PORT = 8000
 
 # Application definition
 
@@ -72,7 +73,7 @@ MIDDLEWARE = [
     "social_django.middleware.SocialAuthExceptionMiddleware",
 ]
 
-ROOT_URLCONF = "core.urls"
+ROOT_URLCONF = "src.core.urls"
 
 TEMPLATES = [
     {
@@ -112,7 +113,7 @@ SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.user.user_details",
 )
 
-WSGI_APPLICATION = "core.wsgi.application"
+WSGI_APPLICATION = "src.core.wsgi.application"
 
 
 # Database
