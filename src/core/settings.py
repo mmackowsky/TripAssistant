@@ -54,10 +54,10 @@ INSTALLED_APPS = [
 ]
 
 INSTALLED_EXTENSIONS = [
-    "src.users",
-    "src.locations",
-    "src.reviews",
-    "src.locations_images",
+    "users",
+    "locations",
+    "reviews",
+    "locations_images",
 ]
 
 INSTALLED_APPS += INSTALLED_EXTENSIONS
@@ -73,7 +73,7 @@ MIDDLEWARE = [
     "social_django.middleware.SocialAuthExceptionMiddleware",
 ]
 
-ROOT_URLCONF = "src.core.urls"
+ROOT_URLCONF = "core.urls"
 
 TEMPLATES = [
     {
@@ -113,7 +113,7 @@ SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.user.user_details",
 )
 
-WSGI_APPLICATION = "src.core.wsgi.application"
+WSGI_APPLICATION = "core.wsgi.application"
 
 
 # Database
@@ -172,13 +172,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "/static/"
+STATIC_URL = "/staticfiles/"
 
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = "/var/app/current/src/staticfiles/"
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
-    "/var/www/static/",
+    os.path.join(BASE_DIR, "static"),
+    "var/app/current/src/staticfiles/",
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")

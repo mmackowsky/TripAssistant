@@ -23,10 +23,10 @@ from .env import env
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("src.users.urls")),
-    path("", include("src.locations.urls")),
-    path("", include("src.reviews.urls")),
-    path("", include("src.locations_images.urls")),
+    path("", include("users.urls")),
+    path("", include("locations.urls")),
+    path("", include("reviews.urls")),
+    path("", include("locations_images.urls")),
     path("social-auth/", include("social_django.urls", namespace="social")),
 ]
 
