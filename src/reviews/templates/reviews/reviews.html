@@ -50,7 +50,11 @@
     <h5>{{ review.stars }} <span class="fa fa-star" style="color: white;"></span></h5>
     </div>
     <div class="author">
+      {% if review.user.image.url %}
       <img src="{{ review.user.image.url }}" alt="Reviewer 1"/>
+      {% else %}
+      <img src="https://tripassistant.s3.eu-north-1.amazonaws.com/default.jpg" />
+      {% endif %}
       <h4>{{ review.user }}</h4>
         <span>{{ review.date_posted }}</span>
     </div>

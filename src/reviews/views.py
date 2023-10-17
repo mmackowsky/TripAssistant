@@ -11,15 +11,13 @@ from django.urls import reverse
 from django.views import View
 from django.views.generic import CreateView, DeleteView, UpdateView
 
-from src.locations.models import Location
+from locations.models import Location
 
 from .forms import ReviewForm
 from .models import Reviews
 
 
 class ReviewsListView(LoginRequiredMixin, View):
-    login_url = "login/"
-
     def get(self, request: HttpRequest, location_id: int) -> HttpResponse:
         location = Location.objects.get(id=location_id)
         reviews = Reviews.objects.filter(location=location)

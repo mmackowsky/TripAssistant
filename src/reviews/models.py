@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils import timezone
 
-from src.locations.models import Location
-from src.users.models import Profile
+from locations.models import Location
+from users.models import Profile
 
 
 class Reviews(models.Model):
