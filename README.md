@@ -14,6 +14,9 @@
 <li> Link to find place on map in Google Maps </li>
 </p>
 
+## Preview
+http://tripassistant-env-1.eba-zbntpgcs.eu-north-1.elasticbeanstalk.com/
+
 ## Technologies
 <ul>
 <li>Python</li>
