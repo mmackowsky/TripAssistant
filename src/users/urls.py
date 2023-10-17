@@ -12,7 +12,7 @@ from .views import (
 
 urlpatterns = [
     path("signup/", SignupView.as_view(), name="signup"),
-    path("signup/<uid64>/<token>/activate", ActivateView.as_view(), name="activate"),
+    path("signup/<uidb64>/<token>/activate", ActivateView.as_view(), name="activate"),
     path("login/", LoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),
     path("profile/", ProfileView.as_view(), name="profile"),

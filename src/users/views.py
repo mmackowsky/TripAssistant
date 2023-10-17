@@ -30,7 +30,7 @@ from .tokens import account_activation_token
 
 class SignupView(View):
     def get(self, request: HttpRequest) -> HttpResponse:
-        form = SignupForm()
+        form = SignupForm(request.POST)
         return render(request, "users/signup.html", {"form": form})
 
     def post(self, request: HttpRequest) -> HttpResponse:
@@ -45,7 +45,9 @@ class SignupView(View):
                 request, "Please confirm your email address to complete registration"
             )
             return redirect("login")
-        logging.error("Form is not valid.")
+        else:
+            self.error_messages(form)
+            logging.error("Form is not valid.")
         return render(request, "users/signup.html", {"form": form})
 
     def send_email(self, request: HttpRequest, user: User, to_email: str) -> None:
@@ -64,10 +66,20 @@ class SignupView(View):
         email.send()
         logging.debug("Email send in activation case.")
 
+    def error_messages(self, form):
+        error_messages = []
+
+        for field, errors in form.errors.items():
+            for error in errors:
+                error_messages.append(f"{error}")
+
+        for error_message in error_messages:
+            messages.error(self.request, error_message)
+
 
 class ActivateView(View):
-    def get(self, request: HttpRequest, uid64: str, token: str) -> HttpResponse:
-        user = self.get_user_by_uid(uid64)
+    def get(self, request: HttpRequest, uidb64: str, token: str) -> HttpResponse:
+        user = self.get_user_by_uid(uidb64)
         if self._activate_user(user, token):
             messages.success(
                 request,
@@ -77,10 +89,10 @@ class ActivateView(View):
         messages.warning(request, "Activation link is invalid")
         return redirect("signup")
 
-    def get_user_by_uid(self, uid64: str) -> Union[User, None]:
+    def get_user_by_uid(self, uidb64: str) -> Union[User, None]:
         User = get_user_model()
         try:
-            uid = force_str(urlsafe_base64_decode(uid64))
+            uid = force_str(urlsafe_base64_decode(uidb64))
             return User.objects.get(pk=uid)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist) as e:
             logging.error(f"Issue in get_user_by_uid: {e}")
