@@ -118,7 +118,11 @@
             <i class="fa fa-home"> <span>{{ item.city }}</span></i><br>
             <i class="fa fa-road"> <span>{{ item.street }} {{ item.house_number }} <br> ZIP: {{ item.postcode }} </span></i><br>
 <!--            <i class="fas fa-user-friends"> <span>{{ item.postcode }} </span></i>-->
-            <i class="fa fa-map-marker"> <a href="http://maps.google.com/?q={{ item.location_name }}+{{ item.city }}" target="_blank"><span>Map Location</span></a></i>
+            <i class="fa fa-map-marker">
+              <a href="http://maps.google.com/?q={{ item.location_name }}+{{ item.city }}" target="_blank">
+                <span>Map Location</span>&nbsp;<img style="height: 20px; width: 20px" src="https://tripassistant.s3.eu-north-1.amazonaws.com/icon-google.png" alt="GOOGLE">
+              </a>
+            </i>
           </div>
           <div class="btn-position-image">
             <a href="{% url 'add-image' location_id=item.id %}"><button class="button-10" role="button">Add image</button></a>
