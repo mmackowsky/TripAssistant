@@ -37,7 +37,10 @@ Clone repository
 Install requirements
 ```pip install requirements.txt``` <br/>
 Make migrations
-```python manage.py makemigrations``` -> ```python manage.py migrate``` <br/><br/>
+```python manage.py makemigrations``` -> ```python manage.py migrate``` <br/>
+To run app with ssl certificate (will allow signing in by google or facebook)
+```python manage.py runsslserver```
+<br/><br/>
 
 Docker/Docker Compose: <br/>
 ```docker-compose build``` -> ```docker-compose up```
