@@ -5,20 +5,20 @@ import requests
 from django.conf import settings
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Q, QuerySet
-from django.shortcuts import render
+from django.db.models import Q
+from django.shortcuts import redirect, render
+from django.views.generic import FormView
 from django.views.generic.list import ListView
 
 from .forms import SearchForm
 from .models import Location
 
 
-class LocationListView(ListView):
+class SearchView(FormView):
     model = Location
     context_object_name = "locations"
+    form_class = SearchForm
     template_name = "home.html"
-    paginate_by = 6
-    ordering = ["location_name"]
 
     def __parse_response_data(self, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         parsed_data = []
@@ -58,62 +58,90 @@ class LocationListView(ListView):
     def __save_to_db(self, data: List[Dict[str, Any]]) -> None:
         Location.objects.bulk_create([Location(**item) for item in data])
 
-    def _extract_form_data(self, form: SearchForm) -> Tuple[str, str]:
-        location_name = form.cleaned_data.get("location_name")
-        place_type = form.cleaned_data.get("place_type")
+    def extract_form_data(self, form: SearchForm) -> Tuple[str, str]:
+        location_name = form.cleaned_data.get("location_name").capitalize()
+        place_type = form.cleaned_data.get("place_type").lower()
         return location_name, place_type
 
-    def get_queryset(self) -> QuerySet[Location]:
-        queryset = super().get_queryset()
+    def post(self, request, *args, **kwargs):
         form = SearchForm(self.request.POST)
         if form.is_valid():
-            logging.debug("Filtering results.")
-            location_name, place_type = self._extract_form_data(form)
+            location_name, place_type = self.extract_form_data(form)
+
+            return redirect(
+                "search", location_name=location_name, place_type=place_type
+            )
+
+        messages.warning(
+            request,
+            "Before search, you have to write name and type of places that you're looking for.",
+        )
+        return render(request, "home.html", {"form": form})
+
+
+class LocationListView(ListView, SearchView):
+    model = Location
+    context_object_name = "locations"
+    template_name = "home.html"
+
+    def get_queryset(self, location_name=None, place_type=None):
+        queryset = super().get_queryset()
+
+        if location_name and place_type:
             queryset = Location.objects.filter(
                 Q(city__icontains=location_name) & Q(place_type=place_type)
             )
 
             if not queryset.exists():
-                self.fetch_and_save_from_api(place_type, location_name)
+                SearchView().fetch_and_save_from_api(place_type, location_name)
                 queryset = Location.objects.filter(
                     Q(city__icontains=location_name) & Q(place_type=place_type)
                 )
 
         return queryset
 
-    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context["form"] = SearchForm(
-            initial={
-                "location_name": self.request.session.get("location_name", ""),
-                "place_type": self.request.session.get("place_type", ""),
-            }
-        )
-        return context
+    def post(self, request, *args, **kwargs):
+        return super().post(request)
 
-    def post(self, request, *args: Any, **kwargs: Any):
-        form = SearchForm(self.request.POST)
-        if form.is_valid():
-            queryset = self.get_queryset()
-            if not queryset:
-                logging.warning("Places not found")
-                messages.warning(self.request, "Places not found.")
-
-            location_name, place_type = self._extract_form_data(form)
-            paginator = Paginator(queryset, self.paginate_by)
-            page_number = self.request.GET.get("page")
-            page_obj = paginator.get_page(page_number)
-
-            logging.debug(f"Rendering results for {location_name}, {place_type}")
-            return render(
-                self.request,
-                "home.html",
-                {
-                    "form": form,
-                    "locations": page_obj,
+    def get(self, request, location_name=None, place_type=None):
+        self.paginate_by = 6
+        queryset = self.get_queryset(location_name, place_type)
+        screen = request.GET.get("screen_width")
+        print(screen)
+        try:
+            screen = int(screen)
+            if screen < 1499:
+                self.paginate_by = 4
+        except (TypeError, ValueError):
+            screen = 800
+        print(self.paginate_by)
+        paginator = Paginator(queryset, self.paginate_by)
+        page_number = request.GET.get("page", 1)
+        page_obj = paginator.get_page(page_number)
+        context = {
+            "form": SearchForm(
+                initial={
                     "location_name": location_name,
                     "place_type": place_type,
-                },
-            )
+                }
+            ),
+            "screen_width": screen,
+            "locations": page_obj,
+            "location_name": location_name,
+            "place_type": place_type,
+        }
 
-        return render(self.request, "home.html", {"form": form})
+        return render(self.request, "home.html", context)
+
+    def get_paginate_by(self, screen_width) -> int | None:
+        paginate_by = 6
+        if screen_width is not None:
+            try:
+                screen_width_int = int(screen_width)
+                if screen_width_int < 1499:
+                    paginate_by = 4
+                    return paginate_by
+            except ValueError:
+                print("Wrong Value")
+                pass
+        return paginate_by

@@ -1,7 +1,12 @@
 from django.urls import path
 
-from .views import LocationListView
+from .views import LocationListView, SearchView
 
 urlpatterns = [
-    path('', LocationListView.as_view(), name="home"),
+    path(
+        "search/<str:location_name>/<str:place_type>",
+        LocationListView.as_view(),
+        name="search",
+    ),
+    path("", SearchView.as_view(), name="home"),
 ]
