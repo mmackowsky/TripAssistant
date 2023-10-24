@@ -18,11 +18,12 @@ from django.core.mail import EmailMessage
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views import View
+from django.views.generic import TemplateView
 
 from .forms import ProfileUpdateForm, SignupForm, UserUpdateForm
 from .tokens import account_activation_token
@@ -176,10 +177,16 @@ class LoginView(View):
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
             user = authenticate(username=username, password=password)
+
+            next_url = self.request.session.get("next")
             if user is not None:
                 login(request, user)
                 messages.info(request, f"Hello {username}!")
-                return redirect("home")
+                if next_url:
+                    del self.request.session["next"]
+                    return redirect(next_url)
+                else:
+                    return redirect(reverse("home"))
         messages.error(request, "Invalid username or password.")
         return render(
             request=request,
@@ -206,3 +213,7 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
         "please make sure you've entered the address you registered with, and check your spam folder."
     )
     success_url = reverse_lazy("home")
+
+
+class SocialNotAvailableView(TemplateView):
+    template_name = "users/social_login_not_available.html"
