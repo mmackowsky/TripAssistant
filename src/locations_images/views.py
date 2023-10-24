@@ -55,6 +55,6 @@ class MultiUploadView(LoginRequiredMixin, FormView):
 
     def handle_no_permission(self):
         if not self.request.user.is_authenticated:
-            self.request.session['next'] = self.request.get_full_path()
-            return redirect('login')
+            self.request.session["next"] = self.request.get_full_path()
+            return redirect("login")
         return super().handle_no_permission()
