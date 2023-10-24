@@ -47,7 +47,41 @@
     border-radius: 5px;
   }
   </style>
+  <script>
 
+  window.onload = function() {
+      var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+      var currentURL = window.location.href;
+      var newURL;
+
+      if (currentURL.indexOf('?') > -1) {
+          if (currentURL.indexOf('screen_width=') > -1) {
+              newURL = currentURL.replace(/screen_width=\d+/, 'screen_width=' + screenWidth);
+          } else {
+              newURL = currentURL + "&screen_width=" + screenWidth;
+          }
+      } else {
+          newURL = currentURL + "?screen_width=" + screenWidth;
+      }
+
+          if (newURL !== currentURL) {
+          window.location.href = newURL;
+      }
+  }
+
+  </script>
+      <script>
+        let lastScreenWidth = window.innerWidth;
+
+  window.addEventListener('resize', () => {
+      const currentScreenWidth = window.innerWidth;
+
+      if (Math.abs(currentScreenWidth - lastScreenWidth) > 100) { // Dla znaczących zmian szerokości
+          lastScreenWidth = currentScreenWidth;
+          location.reload(); // przeładuj stronę
+      }
+  });
+    </script>
   </head>
 {% endblock %}
 
@@ -56,7 +90,7 @@
   {% block content %}
     <div class="s01">
 
-      <form method="POST" action="?page=1&location_name={{ location_name }}&place_type={{ place_type }}">
+      <form method="POST">
         {% csrf_token %}
         <fieldset>
           <legend>Discover the Amazing City</legend>
@@ -78,7 +112,6 @@
 
     </div>
 
-  {% if form.is_valid %}
   <main>
 
     <div class="all-container">
@@ -108,7 +141,7 @@
           </a>
         </div>
           {% else %}
-              <img class="card-img" src="media/places/default_place_image.jpg" alt="Location image">
+              <img class="card-img" src="https://tripassistant.s3.eu-north-1.amazonaws.com/default_place_image.png" alt="Location image">
           {% endif %}
           <h6 class="place_type">{{ item.place_type }}</h6>
           <h5>{{ item.location_name }} - {{ item.avg_rating }} <span class="fa fa-star"></span> </h5>
@@ -140,15 +173,10 @@
     <div class="pagination justify-content-center">
 
 		{% for page_num in locations.paginator.page_range %}
-
-			<form method="POST" action="?page={{ page_num }}">
-				{% csrf_token %}
-				<input type="hidden" name="place_type" value="{{ request.POST.place_type }}">
-				<input type="hidden" name="location_name" value="{{ request.POST.location_name }}">
-				<button type="submit" {% if page_num == locations.number %}class="active"{% endif %}><span>{{ page_num }}</span></button>
-            </form>
-
-		{% endfor %}
+            <a href="?page={{ page_num }}&place_type={{ request.GET.place_type }}&location_name={{ request.GET.location_name }}">
+                <button {% if page_num == locations.number %}class="active"{% endif %}><span>{{ page_num }}</span></button>
+            </a>
+        {% endfor %}
 
 	</div>
 
@@ -157,7 +185,6 @@
     {% endif %}
 
   </main>
-  {% endif %}
 
     <script>
       console.log($(document).ready(function() {
@@ -170,6 +197,31 @@
         });
       })
       )
+    </script>
+    <script>
+
+       function getScreenSizeAndPaginate() {
+        const screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        const url = `?screen_width=${screenWidth}`;
+        fetch(url, {
+                method: 'GET',
+       })
+        .then(response => {
+          if (response.ok) {
+            return response.text();
+          } else {
+            throw new Error('Network response was not ok!');
+          }
+        })
+         .then(html => {
+           const container = document.getElementById('response-container');
+           container.innerHTML = html;
+         })
+       }
+
+
+       window.addEventListener('load', getScreenSizeAndPaginate);
+
     </script>
 
 {% endblock %}
