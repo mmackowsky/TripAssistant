@@ -4,6 +4,9 @@ import boto3
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import FormView
 
@@ -13,14 +16,13 @@ from .forms import MultiUploadForm
 from .models import Images
 
 
-class MultiUploadView(FormView):
+class MultiUploadView(LoginRequiredMixin, FormView):
     template_name = "locations_images/add_image.html"
     form_class = MultiUploadForm
-    success_url = "/"
 
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+    def get_success_url(self):
+        location_id = self.kwargs["location_id"]
+        return reverse("add-image", args=[location_id])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -50,3 +52,9 @@ class MultiUploadView(FormView):
             )
             messages.success(self.request, "Successful upload!")
         return super(MultiUploadView, self).form_valid(form)
+
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            self.request.session['next'] = self.request.get_full_path()
+            return redirect('login')
+        return super().handle_no_permission()
