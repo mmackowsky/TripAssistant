@@ -8,6 +8,7 @@ from .views import (
     ProfileView,
     ResetPasswordView,
     SignupView,
+    SocialNotAvailableView,
 )
 
 urlpatterns = [
@@ -30,5 +31,10 @@ urlpatterns = [
             template_name="users/password_reset_complete.html"
         ),
         name="password_reset_complete",
+    ),
+    path(
+        "social_login/",
+        SocialNotAvailableView.as_view(),
+        name="social_login_not_available",
     ),
 ]
