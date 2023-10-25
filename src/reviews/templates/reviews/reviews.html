@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block html_head %}
-<head>
-  <link href="{% static 'review/css/style.css' %}" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro|Montez" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-<style>
+    <head>
+        <link href="{% static 'review/css/style.css' %}" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro|Montez"
+              rel="stylesheet">
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <style>
   .pagination {
     position: relative;
     display: inline-block;
@@ -31,75 +31,75 @@
     background-color: #ddd;
     border-radius: 5px;
   }
-</style>
-
-</head>
+        </style>
+    </head>
 {% endblock %}
-
 {% block review_content %}
-<body>
-
-
-<h3 class="centered" style="text-decoration: underline">{{ location_name }} - {{ average_rating }}/5 <span class="fa fa-star" style="color: white;"></span></h3>
-
-<section class="section--reviews">
-  {% for review in reviews %}
-
-  <div class="review_item">
-    <div style="position: relative; color: white; left: 80px;">
-    <h5>{{ review.stars }} <span class="fa fa-star" style="color: white;"></span></h5>
-    </div>
-    <div class="author">
-      {% if review.user.image.url %}
-      <img src="{{ review.user.image.url }}" alt="Reviewer 1"/>
-      {% else %}
-      <img src="https://tripassistant.s3.eu-north-1.amazonaws.com/default.jpg" />
-      {% endif %}
-      <h4>{{ review.user }}</h4>
-        <span>{{ review.date_posted }}</span>
-    </div>
-
-    <div class="review_words">
-      {{ review.content }}
-    </div>
-    {% if review.user == request.user.profile %}
-      <div class="button-group">
-        <form method="post" action="{% url 'delete-review' review.id %}">
-          {% csrf_token %}
-          <div>
-            <button class="button-10 btn btn-danger" style="background: linear-gradient(180deg, #fa3d55 0%, #FF0000 100%);" role="button" type="submit">Delete</button>
-          </div>
-        </form>
-
-          <div>
-            <a href="{% url 'edit-review' review.id %}"><button class="button-10 btn btn-primary" style="background: linear-gradient(180deg, #4B91F7 0%, #367AF6 100%);" role="button" type="submit">Edit</button></a>
-          </div>
-
-      </div>
-    {% endif %}
-  </div>
-  {% endfor %}
-  {% if not reviews %}
-  <h1 class="centered">No reviews yet. Be the very first person and click button below!</h1>
-  {% endif %}
-
-</section>
-
-<div class="btn-position justify-content-center">
-  <a href="{% url 'add-review' location_id=location_id %}">
-    <button class="button-10" role="button" type="submit">Add review</button>
-  </a>
-</div>
-
-<div class="pagination justify-content-center">
-      {% if reviews.has_next or reviews.has_previous %}
-      {% for page_num in reviews.paginator.page_range %}
-
-              <a href="?page={{ page_num }}"><button type="submit" {% if page_num == reviews.number %}class="active"{% endif %}><span>{{ page_num }}</span></button></a>
-
-      {% endfor %}
-      {% endif %}
-</div>
-
-</body>
+    <body>
+        <h3 class="centered" style="text-decoration: underline">
+            {{ location_name }} - {{ average_rating }}/5 <span class="fa fa-star" style="color: white;"></span>
+        </h3>
+        <section class="section--reviews">
+            {% for review in reviews %}
+                <div class="review_item">
+                    <div style="position: relative; color: white; left: 80px;">
+                        <h5>
+                            {{ review.stars }} <span class="fa fa-star" style="color: white;"></span>
+                        </h5>
+                    </div>
+                    <div class="author">
+                        {% if review.user.image.url %}
+                            <img src="{{ review.user.image.url }}" alt="Reviewer 1" />
+                        {% else %}
+                            <img src="https://tripassistant.s3.eu-north-1.amazonaws.com/default.jpg" />
+                        {% endif %}
+                        <h4>{{ review.user }}</h4>
+                        <span>{{ review.date_posted }}</span>
+                    </div>
+                    <div class="review_words">{{ review.content }}</div>
+                    {% if review.user == request.user.profile %}
+                        <div class="button-group">
+                            <form method="post" action="{% url 'delete-review' review.id %}">
+                                {% csrf_token %}
+                                <div>
+                                    <button class="button-10 btn btn-danger"
+                                            style="background: linear-gradient(180deg, #fa3d55 0%, #FF0000 100%)"
+                                            role="button"
+                                            type="submit">Delete</button>
+                                </div>
+                            </form>
+                            <div>
+                                <a href="{% url 'edit-review' review.id %}">
+                                    <button class="button-10 btn btn-primary"
+                                            style="background: linear-gradient(180deg, #4B91F7 0%, #367AF6 100%)"
+                                            role="button"
+                                            type="submit">Edit</button>
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            {% if not reviews %}
+                <h1 class="centered">No reviews yet. Be the very first person and click button below!</h1>
+            {% endif %}
+        </section>
+        <div class="btn-position justify-content-center">
+            <a href="{% url 'add-review' location_id=location_id %}">
+                <button class="button-10" role="button" type="submit">Add review</button>
+            </a>
+        </div>
+        <div class="pagination justify-content-center">
+            {% if reviews.has_next or reviews.has_previous %}
+                {% for page_num in reviews.paginator.page_range %}
+                    <a href="?page={{ page_num }}">
+                        <button type="submit"
+                                {% if page_num == reviews.number %}class="active"{% endif %}>
+                            <span>{{ page_num }}</span>
+                        </button>
+                    </a>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </body>
 {% endblock %}
