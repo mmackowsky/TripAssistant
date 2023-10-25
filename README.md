@@ -19,14 +19,13 @@ http://tripassistant-env-1.eba-zbntpgcs.eu-north-1.elasticbeanstalk.com/
 
 ## Technologies
 <ul>
-<li>Python</li>
-<li>Django</li>
-<li>PostgreSQL</li>
-<li>HTML</li>
-<li>CSS</li>
-<li>Bootstrap</li>
+<li>Python 3.11</li>
+<li>Django 4.2.3</li>
+<li>PostgreSQL 15</li>
+<li>HTML / CSS / Bootstrap</li>
 <li>Nominatim API</li>
 <li>Docker / Docker-Compose</li>
+<li>AWS S3</li>
 </ul>
 
 ## Setup
