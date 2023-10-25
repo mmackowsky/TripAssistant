@@ -1,3 +1,4 @@
+from django.core.validators import MaxValueValidator
 from django.db import models
 from django.utils import timezone
 
@@ -11,7 +12,7 @@ class Reviews(models.Model):
     )
     content = models.CharField(max_length=500)
     date_posted = models.DateTimeField(default=timezone.now)
-    stars = models.PositiveIntegerField(default=0)
+    stars = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(5)])
     location = models.ForeignKey(
         Location, on_delete=models.CASCADE, default=None, related_name="reviews"
     )
