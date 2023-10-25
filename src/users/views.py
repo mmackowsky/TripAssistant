@@ -7,8 +7,8 @@ import boto3
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -19,7 +19,6 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
-from django.utils.decorators import method_decorator
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views import View
@@ -80,7 +79,7 @@ class SignupView(View):
 
 class ActivateView(View):
     def get(self, request: HttpRequest, uidb64: str, token: str) -> HttpResponse:
-        user = self.get_user_by_uid(uidb64)
+        user = ActivateView.get_user_by_uid(uidb64)
         if self._activate_user(user, token):
             messages.success(
                 request,
@@ -90,7 +89,8 @@ class ActivateView(View):
         messages.warning(request, "Activation link is invalid")
         return redirect("signup")
 
-    def get_user_by_uid(self, uidb64: str) -> Union[User, None]:
+    @staticmethod
+    def get_user_by_uid(uidb64: str) -> Union[User, None]:
         User = get_user_model()
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
@@ -108,8 +108,7 @@ class ActivateView(View):
         return False
 
 
-@method_decorator(login_required, name="dispatch")
-class ProfileView(View):
+class ProfileView(View, LoginRequiredMixin):
     def get(self, request: HttpRequest) -> HttpResponse:
         user_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileUpdateForm(instance=request.user.profile)
