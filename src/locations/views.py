@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import requests
 from django.conf import settings
@@ -41,7 +41,7 @@ class SearchView(FormView):
         self, place_type: str, location_name: str
     ) -> List[Dict[str, Any]]:
         query = f"{place_type} near {location_name}"
-        api_url = f"https://nominatim.openstreetmap.org/search?q={query}&format=json&addressdetails=1&limit=50&key={settings.NOMINATIM_API_KEY}"
+        api_url = f"{settings.NOMINATIM_URL}/search?q={query}&format=json&addressdetails=1&limit=50&key={settings.NOMINATIM_API_KEY}"
         try:
             response = requests.get(api_url, timeout=10)
             response.raise_for_status()
@@ -76,7 +76,7 @@ class SearchView(FormView):
             request,
             "Before search, you have to write name and type of places that you're looking for.",
         )
-        return render(request, "home.html", {"form": form})
+        return render(request, self.template_name, {"form": form})
 
 
 class LocationListView(ListView, SearchView):
@@ -100,24 +100,31 @@ class LocationListView(ListView, SearchView):
 
         return queryset
 
-    def post(self, request, *args, **kwargs):
-        return super().post(request)
-
-    def get(self, request, location_name=None, place_type=None):
-        self.paginate_by = 6
-        queryset = self.get_queryset(location_name, place_type)
-        screen = request.GET.get("screen_width")
-        print(screen)
+    def __calculate_paginate_by(self, screen: int | str):
+        """
+        Return number of elements in pagination based on current screen width.
+        """
         try:
             screen = int(screen)
             if screen < 1499:
-                self.paginate_by = 4
+                return 4
         except (TypeError, ValueError):
-            screen = 800
-        print(self.paginate_by)
-        paginator = Paginator(queryset, self.paginate_by)
+            return 6
+        return 6
+
+    def get(
+        self,
+        request,
+        location_name: Optional[str] = None,
+        place_type: Optional[str] = None,
+    ):
+        queryset = self.get_queryset(location_name, place_type)
+        screen = request.GET.get("screen_width")
+
+        paginator = Paginator(queryset, self.__calculate_paginate_by(screen))
         page_number = request.GET.get("page", 1)
         page_obj = paginator.get_page(page_number)
+
         context = {
             "form": SearchForm(
                 initial={
@@ -131,17 +138,4 @@ class LocationListView(ListView, SearchView):
             "place_type": place_type,
         }
 
-        return render(self.request, "home.html", context)
-
-    def get_paginate_by(self, screen_width) -> int | None:
-        paginate_by = 6
-        if screen_width is not None:
-            try:
-                screen_width_int = int(screen_width)
-                if screen_width_int < 1499:
-                    paginate_by = 4
-                    return paginate_by
-            except ValueError:
-                print("Wrong Value")
-                pass
-        return paginate_by
+        return render(self.request, self.template_name, context)
