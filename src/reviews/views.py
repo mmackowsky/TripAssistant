@@ -9,6 +9,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views import View
 from django.views.generic import CreateView, DeleteView, UpdateView
+from django.db.models import QuerySet
 
 from locations.models import Location
 
@@ -21,7 +22,7 @@ class ReviewsListView(View):
         location = Location.objects.get(id=location_id)
         reviews = Reviews.objects.filter(location=location)
         average_rating = self.get_stars_average(reviews)
-        logging.debug(f"Filtering reviews by {location} id.")
+        logging.debug(f"ReviewsListView:GET:Filtering reviews by {location} id.")
 
         paginator = Paginator(reviews, 12)
         page_number = request.GET.get("page")
@@ -39,7 +40,7 @@ class ReviewsListView(View):
             },
         )
 
-    def get_stars_average(self, reviews: List[Reviews]) -> Union[float, str]:
+    def get_stars_average(self, reviews: QuerySet[Reviews]) -> Union[float, str]:
         reviews = reviews.values("stars")
         stars_list = [review["stars"] for review in reviews]
         if not stars_list or sum(stars_list) == 0:
@@ -72,7 +73,7 @@ class AddReviewView(LoginRequiredMixin, CreateView):
             )
             return redirect("reviews", location_id=location_id)
 
-        messages.info(self.request, "Review added.")
+        messages.success(self.request, "Review added.")
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -97,7 +98,6 @@ class AddReviewView(LoginRequiredMixin, CreateView):
 
     def handle_no_permission(self):
         if not self.request.user.is_authenticated:
-            # Jeśli użytkownik nie jest zalogowany, przechowaj bieżący URL w sesji
             self.request.session['next'] = self.request.get_full_path()
             return redirect('login')
         return super().handle_no_permission()
@@ -108,7 +108,7 @@ class ReviewDeleteView(LoginRequiredMixin, DeleteView):
     template_name = "reviews/delete_confirm.html"
 
     def get_queryset(self):
-        return Reviews.objects.filter(user=self.request.user.profile)
+        return super().get_queryset().filter(user=self.request.user.profile)
 
     def get_success_url(self) -> str:
         review = self.get_object()
@@ -131,7 +131,7 @@ class ReviewUpdateView(LoginRequiredMixin, UpdateView):
     form_class = ReviewForm
 
     def get_queryset(self):
-        return Reviews.objects.filter(user=self.request.user.profile)
+        return super().get_queryset().filter(user=self.request.user.profile)
 
     def get_success_url(self) -> str:
         review = self.get_object()
