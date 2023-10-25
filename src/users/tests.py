@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -12,14 +14,13 @@ from .views import ActivateView, ProfileView
 
 class UsersViewsTest(TestCase):
     def setUp(self):
-        self.client = Client()
         self.user = User.objects.create_user(
             username="testuser", email="test@example.com", password="testpassword"
         )
 
     def test_signup_view(self):
         response = self.client.get(reverse("signup"))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
         response = self.client.post(
             reverse("signup"),
@@ -30,22 +31,22 @@ class UsersViewsTest(TestCase):
                 "password2": "newpassword123",
             },
         )
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertEqual(User.objects.count(), 2)
 
     def test_login_view(self):
         response = self.client.get(reverse("login"))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
         response = self.client.post(
             reverse("login"), {"username": "testuser", "password": "testpassword"}
         )
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
 
     def test_logout_view(self):
         self.client.force_login(self.user)
         response = self.client.get(reverse("logout"))
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
 
     def test_save_to_s3(self):
         file_content = b"Test file content"
@@ -60,16 +61,16 @@ class UsersViewsTest(TestCase):
     def test_profile_view(self):
         self.client.force_login(self.user)
         response = self.client.get(reverse("profile"))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_reset_password_view(self):
         response = self.client.get(reverse("password-reset"))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
         response = self.client.post(
             reverse("password-reset"), {"email": "test@example.com"}
         )
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
 
     def test_activate_view(self):
         # Create a user to activate
@@ -94,11 +95,11 @@ class UsersViewsTest(TestCase):
         uid = urlsafe_base64_encode(force_bytes(user.pk))
 
         # Test with valid UID
-        result = ActivateView().get_user_by_uid(uid64=uid)
+        result = ActivateView.get_user_by_uid(uidb64=uid)
         self.assertEqual(result, user)
 
         # Test with invalid UID
-        result = ActivateView().get_user_by_uid("invalid_uid")
+        result = ActivateView.get_user_by_uid(uidb64="invalid_uid")
         self.assertIsNone(result)
 
     def test_reset_password_view_template_used(self):
