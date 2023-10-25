@@ -229,6 +229,7 @@ MESSAGE_TAGS = {
 }
 
 NOMINATIM_API_KEY = env("NOMINATIM_API_KEY")
+NOMINATIM_URL = "https://nominatim.openstreetmap.org"
 
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
