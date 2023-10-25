@@ -30,6 +30,6 @@ urlpatterns = [
     path("social-auth/", include("social_django.urls", namespace="social")),
 ]
 
-if env("ENVIRONMENT") == "DEV":
+if env("ENVIRONMENT") == "DEV" and env("DEBUG"):
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
