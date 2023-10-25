@@ -1,15 +1,15 @@
 import logging
-from typing import List, Union
+from typing import Union
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
+from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views import View
 from django.views.generic import CreateView, DeleteView, UpdateView
-from django.db.models import QuerySet
 
 from locations.models import Location
 
@@ -92,14 +92,14 @@ class AddReviewView(LoginRequiredMixin, CreateView):
                 messages.error(self.request, f"{error}")
 
         context = self.get_context_data()
-        context['form'] = form
-        context['location_name'] = location.location_name
+        context["form"] = form
+        context["location_name"] = location.location_name
         return self.render_to_response(context)
 
     def handle_no_permission(self):
         if not self.request.user.is_authenticated:
-            self.request.session['next'] = self.request.get_full_path()
-            return redirect('login')
+            self.request.session["next"] = self.request.get_full_path()
+            return redirect("login")
         return super().handle_no_permission()
 
 
