@@ -22,36 +22,34 @@ from django.urls import reverse, reverse_lazy
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views import View
-from django.views.generic import TemplateView
+from django.views.generic import FormView, TemplateView
 
 from .forms import ProfileUpdateForm, SignupForm, UserUpdateForm
 from .tokens import account_activation_token
 
 
-class SignupView(View):
-    def get(self, request: HttpRequest) -> HttpResponse:
-        form = SignupForm(request.POST)
-        return render(request, "users/signup.html", {"form": form})
+class SignupView(FormView):
+    template_name = "users/signup.html"
+    form_class = SignupForm
 
-    def post(self, request: HttpRequest) -> HttpResponse:
-        form = SignupForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.is_active = False
-            user.save()
-            to_email = form.cleaned_data.get("email")
-            self.send_email(request, user, to_email)
-            messages.info(
-                request, "Please confirm your email address to complete registration"
-            )
-            return redirect("login")
-        else:
-            self.error_messages(form)
-            logging.error("Form is not valid.")
-        return render(request, "users/signup.html", {"form": form})
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.is_active = False
+        user.save()
+        to_email = form.cleaned_data.get("email")
+        self.send_email(user, to_email)
+        messages.info(
+            self.request, "Please confirm your email address to complete registration"
+        )
+        return redirect("login")
 
-    def send_email(self, request: HttpRequest, user: User, to_email: str) -> None:
-        current_site = get_current_site(request)
+    def form_invalid(self, form):
+        self.error_messages(form)
+        logging.error("Form is not valid.")
+        return super().form_invalid(form)
+
+    def send_email(self, user, to_email):
+        current_site = get_current_site(self.request)
         mail_subject = "Activation link has been sent to your email id"
         message = render_to_string(
             "users/acc_active_email.html",
@@ -64,7 +62,7 @@ class SignupView(View):
         )
         email = EmailMessage(mail_subject, message, to=[to_email])
         email.send()
-        logging.debug("Email send in activation case.")
+        logging.debug("Email sent in activation case.")
 
     def error_messages(self, form):
         error_messages = []
